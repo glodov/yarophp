@@ -1,4 +1,6 @@
-yarophp
+yPHP
+
+Content management framework on PHP 5.3+
 =======
 
 ## Runtime variables:
