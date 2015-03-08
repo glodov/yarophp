@@ -1,5 +1,7 @@
 <?
 
+namespace Core;
+
 /**
  * The Database class.
  * 
@@ -9,16 +11,15 @@
 class Database
 {
 	
-	private static $instance = null;
-	private $log = array();
-	//public $clause = array();
+	private $log = [];
 	
-	private $dbn = null;
-	private $lastQuery = null;
-	private $currentError;
+	private $dbn, $lastQuery, $currentError;
+
+	private static $logDisabled = false;
+	private static $instance;
 
 	/**
-	 * The class constructor.
+	 * The singleton class constructor.
 	 * 
 	 * @access private
 	 */
@@ -29,6 +30,7 @@ class Database
 	
 	/**
 	 * The clone function for class.
+	 * Disabled to clone singleton.
 	 * 
 	 * @access private.
 	 */
@@ -51,6 +53,19 @@ class Database
         }
         return self::$instance;
 	}
+
+	/**
+	 * Disables/enables database logging.
+	 * Use this to disable log with cron/parser to prevent RAM limit exceeding.
+	 *
+	 * @static
+	 * @access public
+	 * @param boolean $bool Disable value if TRUE then disabled, if FALSE then enabled.
+	 */
+	public static function disableLog($bool = true)
+	{
+		self::$logDisabled = (bool)$bool;
+	}
 	
 	/**
 	 * The function opens database connection.
@@ -60,23 +75,23 @@ class Database
 	 */
 	public function open()
 	{
-		$dsn = 'mysql:dbname='.Config::get('db@name').';host='.Config::get('db@host').';';
-		$user = Config::get('db@user');
-		$password = Config::get('db@pass');
-		$options = array();
-		if (Config::get('db@persistent'))
+		$dsn = 'mysql:dbname='.Config::get('name@db').';host='.Config::get('host@db').';';
+		$user = Config::get('user@db');
+		$password = Config::get('pass@db');
+		$options = [];
+		if (Config::get('pers@db'))
 		{
-			$options[PDO::ATTR_PERSISTENT] = true;
+			$options[\PDO::ATTR_PERSISTENT] = true;
 		}
 
 		try {
-			$this->dbn = new PDO($dsn, $user, $password, $options);
-			$this->execute( 'set names '.Config::get('db@charset', 'utf8') );
-			$this->execute( 'set time_zone="'.date('P').'"');
+			$this->dbn = new \PDO($dsn, $user, $password, $options);
+			$this->execute('set names '.Config::get('char@db', 'utf8'));
+			$this->execute('set time_zone="'.date('P').'"');
 			$this->execute('set sql_mode=""');
-		} catch (PDOException $e) {
-			echo 'Connection failed: ' . $e->getMessage()."\n";
-			exit;
+		} catch (\PDOException $e) {
+			\Application::log($this, $e->getMessage());
+			\Application::halt(500);
 		}
 	}
 	
@@ -89,7 +104,7 @@ class Database
 	protected function writeLog( $query )
 	{
 		$this->lastQuery = $query;
-		if (Runtime::get('DatabaseLogDisabled'))
+		if (self::$logDisabled)
 		{
 			return false;
 		}
@@ -117,7 +132,7 @@ class Database
 	 */
 	protected function map( $column )
 	{
-		$result = array();
+		$result = [];
 		foreach ( explode( '.', $column ) as $str )
 		{
 			$result[] = '`'.$str.'`';
@@ -159,13 +174,13 @@ class Database
 	public function query( $query )
 	{
 		$this->writeLog( $query );
-		$result = array();
+		$result = [];
 		$stm = $this->dbn->query( $query );
 		if ( $stm === false )
 		{
 			return $result;
 		}
-		$stm->setFetchMode( PDO::FETCH_ASSOC );
+		$stm->setFetchMode( \PDO::FETCH_ASSOC );
 		while ( $row = $stm->fetch() )
 		{
 			$result[] = $row;
@@ -197,7 +212,7 @@ class Database
 	 * @param array $params The clause.
 	 * @return int The count of affected rows.
 	 */
-	public function delete( $table, $params = array() )
+	public function delete( $table, $params = [] )
 	{
 		$this->currentError = '00000';
 		if ( !count( $params ) )
@@ -218,7 +233,7 @@ class Database
 	 * @param array $params The clause.
 	 * @return int The count of affected rows.
 	 */
-	public function update( $table, $fields = array(), $params = array() )
+	public function update( $table, $fields = [], $params = [] )
 	{
 		$this->currentError = '00000';
 		if ( !count( $params ) || !count( $fields ) )
@@ -226,7 +241,7 @@ class Database
 			return false;
 		}
 		$this->currentError = null;
-		$primary = array();
+		$primary = [];
 		foreach ( $params as $value )
 		{
 			$arr = explode( ' ', $value, 3 );
@@ -235,7 +250,7 @@ class Database
 				$primary[] = $arr[0];
 			}
 		}
-		$values = array();
+		$values = [];
 		foreach ( $fields as $name => $value )
 		{
 			if ( in_array( $name, $primary ) )
@@ -260,10 +275,10 @@ class Database
 	 * @param array $fields The fields values.
 	 * @return int The count of affected rows.
 	 */
-	public function insert( $table, $fields = array() )
+	public function insert( $table, $fields = [] )
 	{
-		$columns = array();
-		$values = array();
+		$columns = [];
+		$values = [];
 		foreach ( $fields as $name => $value )
 		{
 			if ( is_array( $value ) || is_object( $value ) )
@@ -284,7 +299,7 @@ class Database
 	 * @param array $params The parameters.
 	 * @return string The parameters in sql string.
 	 */
-	public function sqlParams( $params = array() )
+	public function sqlParams( $params = [] )
 	{
 		$clause = '';
 		if ( is_array( $params ) )
@@ -356,7 +371,7 @@ class Database
 	 * @param int $limit The limit.
 	 * @return array The array of rows.
 	 */
-	public function select( $table, $columns = '*', $params = array(), $order = null, $offset = null, $limit = null )
+	public function select( $table, $columns = '*', $params = [], $order = null, $offset = null, $limit = null )
 	{
 		$query = 'select '.$columns.' from '.$this->map( $table ).' where 1 '
 			.$this->sqlParams( $params ). $this->sqlSort( $order ).$this->sqlLimit( $offset, $limit );
@@ -424,7 +439,7 @@ class Database
 		{
 			return "Connected to MYSQL database\n";
 		}
-		return "Not conneced\n";
+		return "Not connected\n";
 	}
 	
 }

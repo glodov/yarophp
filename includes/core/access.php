@@ -1,5 +1,7 @@
 <?
 
+namespace Core;
+
 class Access
 {
 

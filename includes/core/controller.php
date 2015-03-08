@@ -1,5 +1,7 @@
 <?
 
+namespace Core;
+
 /**
  * The base Controller class.
  * 
@@ -10,8 +12,8 @@ abstract class Controller
 {
 	
 	private $view,
-			$css = array(),
-			$scripts = array();
+			$css = [],
+			$scripts = [];
 	
 	protected $defaultAccess = Access::NONE;
 	

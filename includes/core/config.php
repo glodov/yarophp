@@ -1,5 +1,7 @@
 <?
 
+namespace Core;
+
 /**
  * The Config class.
  * 
@@ -9,7 +11,7 @@
 class Config
 {
 	
-	private static $container = array();
+	private static $container = [];
 
 	/**
 	 * The function returns config value by its name.
@@ -101,17 +103,48 @@ class Config
 		}
 		return true;
 	}
+
+	/**
+	 * The function returns data values into string separated by divider
+	 *
+	 * @static
+	 * @access private
+	 * @param array $data The data values.
+	 * @param integer $level The depth level.
+	 * @param string $divider The string divider.
+	 * @param string $tab The tab value.
+	 * @return string The config values.
+	 */
+	private static function showItem($data, $level, $divider = "\n", $tab = "\n")
+	{
+		$result = '';
+		foreach ($data as $key => $value)
+		{
+			$result .= str_repeat("\t", $level) . $key . ' = ';
+			if (is_scalar($value))
+			{
+				$result .= $value . $divider;
+			}
+			else
+			{
+				$result .= self::showItem($value, $divider, $level + 1);
+			}
+		}
+		return $result;
+	}
 	
 	/**
-	 * The function returns array of config values.
+	 * The function returns config values to show.
 	 * 
 	 * @static
 	 * @access public
-	 * @return array The config values.
+	 * @param string $divider The string divider.
+	 * @param string $tab The tab value.
+	 * @return string The config values.
 	 */
-	public static function show()
+	public static function show($divider = "\n", $tab = "\t")
 	{
-		return self::$container;
+		return self::showItem(self::$container, 0, $divider, $tab);
 	}
 
 }
