@@ -126,11 +126,11 @@ class Database
 	/**
 	 * The function returns sql quoted string (table/column names).
 	 * 
-	 * @access protected
+	 * @access public
 	 * @param string $column The column or table name.
 	 * @return string The quoted column.
 	 */
-	protected function map( $column )
+	public function map( $column )
 	{
 		$result = [];
 		foreach ( explode( '.', $column ) as $str )

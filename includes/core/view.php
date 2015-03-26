@@ -1,12 +1,14 @@
-<? 
+<?php
+
+namespace Core;
 
 class View 
 {
 	
-	private $data = array();
+	private $data = [];
 	private $method = 'index';
 	
-	private $controller = null;
+	private $controller;
 	
 	public function set( $key, $value = null )
 	{
@@ -61,7 +63,7 @@ class View
 	 * @access public
 	 * @param object $Controller The controller object.
 	 */
-	public function setController( Controller $Controller )
+	public function setController( \Core\Controller $Controller )
 	{
 		$this->controller = $Controller;
 	}

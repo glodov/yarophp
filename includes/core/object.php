@@ -1,5 +1,7 @@
 <?
 
+namespace Core;
+
 /**
  * The Object class.
  * Using to access models in database.
@@ -11,8 +13,9 @@
 abstract class Object
 {
 	
-	private static $instanceCount = 0;
-	private static $cache = array();
+	private static $instanceCount = 0,
+					$cache = [],
+					$cacheDisabled = false;
 
 	private $_original = null;
 
@@ -173,6 +176,19 @@ abstract class Object
 	}
 	
 	/**
+	 * Disables cache for Object.
+	 * Use this to disable log with cron/parser to prevent RAM limit exceeding.
+	 * 
+	 * @static
+	 * @access public
+	 * @param boolean $bool If TRUE disables cache, if FALSE enables.
+	 */
+	public static function disableCache($bool = true)
+	{
+		self::$cacheDisabled = (bool)$bool;
+	}
+	
+	/**
 	 * The function returns TRUE if auto cache is enabled for current object, otherwise FALSE.
 	 * 
 	 * @access protected
@@ -212,7 +228,7 @@ abstract class Object
 	 */
 	protected function pushCache( Object $Object )
 	{
-		if (Runtime::get('ObjectCacheDisabled'))
+		if (self::$cacheDisabled)
 		{
 			return false;
 		}

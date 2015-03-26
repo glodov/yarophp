@@ -66,27 +66,20 @@ abstract class Controller
 			$parent = get_class( $this );
 			do
 			{
-				if ( $parent == 'Controller_Base' )
+				if ('\\Controller\\Base' === $parent)
 				{
 					break;
 				}
 				$class = new $parent();
-				$name = str_replace( 'Controller_', 'View_', $parent );
-				if ( Autoload::exist( $name ) )
+				$name = str_replace( '\\Controller\\', '\\View\\', $parent );
+				if ( \Autoload::exist( $name ) )
 				{
 					$View = $name;
 					break;
 				}
 				$parent = get_parent_class( $class );
 			} while ( $parent );
-			if ( $View === null )
-			{
-				$this->setView( new View_Base() );
-			}
-			else
-			{
-				$this->setView( new $View() );
-			}
+			$this->setView(null === $View ? new \View\Base() : $View);
 		}
 		else
 		{
@@ -236,7 +229,7 @@ abstract class Controller
 		for ( $i = 0; $i < count( $args ); $i++ )
 		{
 			$arr = array_slice( $args, 0, count( $args ) - $i );
-			$name = $className.'_'.implode( '_', $arr );
+			$name = $className.'\\'.implode( '\\', $arr );
 			if ( Autoload::exist( $name ) !== false )
 			{
 				$Controller = new $name();

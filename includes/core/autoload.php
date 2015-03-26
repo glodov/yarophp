@@ -38,12 +38,12 @@ class Autoload
 	public static function exist( $class )
 	{
 		$class = strtolower($class);
-		$arr = preg_split('/[\\\_]+/', $class, 2);
+		$arr = preg_split('/[\\\\]+/', $class, 2);
 
 		$dirs = [dirname(__DIR__)];
 		foreach( $dirs as $dir )
 		{
-			$file = $dir.'/'.preg_replace('/[\\\_]+/', '/', $class).'.php';
+			$file = $dir.'/'.preg_replace('/[\\\\]+/', '/', $class).'.php';
 			if ( file_exists( $file ) )
 			{
 				return $file;
