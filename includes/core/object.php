@@ -297,6 +297,8 @@ abstract class Object
 	/**
 	 * The function saves current object to database.
 	 * Always saves as new object.
+	 * 
+	 * @todo auto_increment works only with Id and id.
 	 *
 	 * @access public
 	 * @return bool TRUE on success, FALSE on failure.
@@ -306,14 +308,15 @@ abstract class Object
 		$this->db()->insert( $this->getTableName(), $this->getFields() ) > 0;
 		if ( $this->db()->getError() == '00000' )
 		{
-			if ( in_array( 'Id', array_keys( get_object_vars( $this ) ) ) )
+			$auto = $this->getAutoincrementField();
+			if ( in_array( $auto, array_keys( get_object_vars( $this ) ) ) )
 			{
-				if ( property_exists( $this, 'Id' ) )
+				if ( property_exists( $this, $auto ) )
 				{
 					$id = $this->db()->getLastId();
 					if ( $id )
 					{
-						$this->Id = $id;
+						$this->$auto = $id;
 					}
 				}
 			}
@@ -338,6 +341,17 @@ abstract class Object
 			$result[] = $field.' = '.$this->$field;
 		}
 		return $result;
+	}
+
+	/**
+	 * Returns default auto increment field name.
+	 * 
+	 * @access protected
+	 * @return string The field name.
+	 */
+	protected function getAutoIncrementField()
+	{
+		return 'Id';
 	}
 	
 	/**
