@@ -156,6 +156,31 @@ abstract class Object
 		ksort( $result );
 		return $result;
 	}
+
+	/**
+	 * Returns current value of primary key.
+	 * 
+	 * @access public
+	 * @return mixed The primary value: string or array for complex primary key, NULL if primary not defined.
+	 */
+	public function id()
+	{
+		$key = $this->getPrimary();
+		if (0 === count($key))
+		{
+			return null;
+		}
+		if (1 === count($key))
+		{
+			return $this->{$key[0]};
+		}
+		$result = [];
+		foreach ($key as $name)
+		{
+			$result[$name] = $this->$name;
+		}
+		return $result;
+	}
 	
 	/**
 	 * The function returns TRUE if primary key is not set, otherwise FALSE.
@@ -309,15 +334,12 @@ abstract class Object
 		if ( $this->db()->getError() == '00000' )
 		{
 			$auto = $this->getAutoincrementField();
-			if ( in_array( $auto, array_keys( get_object_vars( $this ) ) ) )
+			if ( in_array( $auto, array_keys( get_object_vars( $this ) ) ) && property_exists( $this, $auto ) )
 			{
-				if ( property_exists( $this, $auto ) )
+				$id = $this->db()->getLastId();
+				if ( $id )
 				{
-					$id = $this->db()->getLastId();
-					if ( $id )
-					{
-						$this->$auto = $id;
-					}
+					$this->$auto = $id;
 				}
 			}
 			$Item = $this->findItem( $this->getPrimaryClause() ) ;

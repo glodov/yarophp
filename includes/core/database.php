@@ -87,6 +87,7 @@ class Database
 		try {
 			$this->dbn = new \PDO($dsn, $user, $password, $options);
 			$this->execute('set names '.Config::get('char@db', 'utf8'));
+			//$this->execute('set character set '.Config::get('char@db', 'utf8'));
 			$this->execute('set time_zone="'.date('P').'"');
 			$this->execute('set sql_mode=""');
 		} catch (\PDOException $e) {
