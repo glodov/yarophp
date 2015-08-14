@@ -4,10 +4,11 @@ include_once(__DIR__.'/core/autoload.php');
 
 /**
  * The main application (dispatcher) class.
- * 
+ *
  * constants:
  * - DIR_CACHE
  * - DIR_CONFIG
+ * - DIR_LOGS
  * - DIR_STARTUP
  *
  * @author Yarick.
@@ -29,7 +30,24 @@ class Application
 
 	public static function run()
 	{
+		\Helper\Console::start();
+		self::checkDirectories();
 		return new self(func_get_args());
+	}
+
+	private static function checkDirectories()
+	{
+		foreach ([self::dirCache(), self::dirLogs()] as $dir)
+		{
+			if (!file_exists($dir))
+			{
+				mkdir($dir, 0777, true);
+			}
+			if (!is_dir($dir) || !is_writable($dir))
+			{
+				exit("Unable to write into $dir");
+			}
+		}
 	}
 
 	public static function halt($errorCode = 404)
@@ -94,7 +112,7 @@ class Application
 	 *
 	 * @static
 	 * @param mixed $target The object.
-	 * @param integer $timestamp The age of actual object. 
+	 * @param integer $timestamp The age of actual object.
 	 * Cache must be younger than timestamp.
 	 * @return mixed The cached data or FALSE on failure.
 	 */
@@ -123,14 +141,14 @@ class Application
 	/**
 	 * Returns cache file path.
 	 *
-	 * @static 
+	 * @static
 	 * @access public
 	 * @param mixed $target The object.
 	 * @return string The file path.
 	 */
 	public static function fileCache($target)
 	{
-		$filename = is_object($target) 
+		$filename = is_object($target)
 			? preg_replace('/[\\\_]+/', '/', get_class($target)) : $target;
 		return self::dirCache().'/'.$filename.'.json';
 	}
@@ -160,15 +178,57 @@ class Application
 	}
 
 	/**
+	 * Returns logs directory.
+	 *
+	 * @static
+	 * @access public
+	 * @return string The directory.
+	 */
+	public static function dirLogs()
+	{
+		return defined('DIR_LOGS') ? DIR_LOGS : dirname(__DIR__) . '/logs';
+	}
+
+	/**
 	 * Returns startup file path.
 	 *
-	 * @static 
+	 * @static
 	 * @access public
 	 * @return string The file path.
 	 */
 	public static function fileStartup($filename)
 	{
 		return self::dirStartup().'/'.$filename.'.php';
+	}
+
+	/**
+	 * Returns array of models names.
+	 *
+	 * @static
+	 * @access public
+	 * @return array The models names.
+	 */
+	public static function getModels()
+	{
+		$result = [];
+		$path = __DIR__ . '/model/';
+		$Iterator = new RecursiveDirectoryIterator($path);
+		$objects = new RecursiveIteratorIterator($Iterator, RecursiveIteratorIterator::SELF_FIRST);
+		foreach ($objects as $name => $object)
+		{
+			if (strtolower(substr($name, -4) != '.php'))
+			{
+				continue;
+			}
+			$name = strtolower(str_replace($path, '', substr($name, 0, strlen($name) - 4)));
+			$name = str_replace(DIRECTORY_SEPARATOR, '\\', $name);
+			$name = '\\Model\\' . ucwords($name, '\\');
+			if (class_exists($name))
+			{
+				$result[]= $name;
+			}
+		}
+		return $result;
 	}
 
 }

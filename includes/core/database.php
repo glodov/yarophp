@@ -2,17 +2,23 @@
 
 namespace Core;
 
+use \Helper\Console as Console;
+use \Core\Database\Schema\Diff as Diff;
+use \Core\Database\Schema\Field as Field;
+use \Core\Database\Schema\Index as Index;
+use \Core\Database\Schema\Table as Table;
+
 /**
  * The Database class.
- * 
+ *
  * @author Yarick.
  * @version 0.2
  */
 class Database
 {
-	
+
 	private $log = [];
-	
+
 	private $dbn, $lastQuery, $currentError;
 
 	private static $logDisabled = false;
@@ -20,27 +26,27 @@ class Database
 
 	/**
 	 * The singleton class constructor.
-	 * 
+	 *
 	 * @access private
 	 */
 	private function __construct()
 	{
 		$this->open();
 	}
-	
+
 	/**
 	 * The clone function for class.
 	 * Disabled to clone singleton.
-	 * 
+	 *
 	 * @access private.
 	 */
 	private function __clone()
 	{
 	}
-	
+
 	/**
 	 * The function returns instance of current class.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @return object The Database object.
@@ -66,11 +72,11 @@ class Database
 	{
 		self::$logDisabled = (bool)$bool;
 	}
-	
+
 	/**
 	 * The function opens database connection.
 	 * Halts script on error.
-	 * 
+	 *
 	 * @access public
 	 */
 	public function open()
@@ -95,10 +101,10 @@ class Database
 			\Application::halt(500);
 		}
 	}
-	
+
 	/**
 	 * The function writes query to database log.
-	 * 
+	 *
 	 * @access protected
 	 * @param string The query.
 	 */
@@ -111,10 +117,10 @@ class Database
 		}
 		$this->log[] = $query;
 	}
-	
+
 	/**
 	 * The function returns quoted string.
-	 * 
+	 *
 	 * @access public
 	 * @param string $string The string.
 	 * @return string The quoted string.
@@ -123,10 +129,10 @@ class Database
 	{
 		return $this->dbn->quote( $string );
 	}
-	
+
 	/**
 	 * The function returns sql quoted string (table/column names).
-	 * 
+	 *
 	 * @access public
 	 * @param string $column The column or table name.
 	 * @return string The quoted column.
@@ -140,10 +146,10 @@ class Database
 		}
 		return implode( '.', $result );
 	}
-	
+
 	/**
 	 * The function executes non select query.
-	 * 
+	 *
 	 * @access protected
 	 * @param string $query The query.
 	 * @return int The count of affected rows.
@@ -153,10 +159,10 @@ class Database
 		$this->writeLog( $query );
 		return $this->dbn->exec( $query );
 	}
-	
+
 	/**
 	 * The function returns last inserted ID for auto increment field.
-	 * 
+	 *
 	 * @access public
 	 * @return int The ID.
 	 */
@@ -167,7 +173,7 @@ class Database
 
 	/**
 	 * The function execute selectable query.
-	 * 
+	 *
 	 * @access public
 	 * @param string $query The query.
 	 * @return array The array of queries.
@@ -188,10 +194,10 @@ class Database
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * The function closes connection to database.
-	 * 
+	 *
 	 * @access public
 	 * @return bool TRUE on success, FALSE on failure.
 	 */
@@ -207,7 +213,7 @@ class Database
 
 	/**
 	 * The function deletes rows from table.
-	 * 
+	 *
 	 * @access public
 	 * @param string $table The table name.
 	 * @param array $params The clause.
@@ -227,7 +233,7 @@ class Database
 
 	/**
 	 * The function updates rows in table.
-	 * 
+	 *
 	 * @access public
 	 * @param string $table The table name.
 	 * @param array $fields The fields values.
@@ -267,10 +273,10 @@ class Database
 		$query = 'update '.$this->map( $table ).' set '.implode( ',', $values ).' where 1 '.$this->sqlParams( $params );
 		return $this->execute( $query );
 	}
-	
+
 	/**
 	 * The function inserts row in table.
-	 * 
+	 *
 	 * @access public
 	 * @param string $table The table name.
 	 * @param array $fields The fields values.
@@ -295,7 +301,7 @@ class Database
 
 	/**
 	 * The function returns sql string of parameters - the clause.
-	 * 
+	 *
 	 * @access public
 	 * @param array $params The parameters.
 	 * @return string The parameters in sql string.
@@ -328,7 +334,7 @@ class Database
 		}
 		return $clause;
 	}
-	
+
 	public function sqlSort( $sort = '' )
 	{
 		$query = '';
@@ -345,7 +351,7 @@ class Database
 		}
 		return $query;
 	}
-	
+
 	public function sqlLimit( $offset = null, $limit = null )
 	{
 		$query = '';
@@ -362,7 +368,7 @@ class Database
 
 	/**
 	 * The function returns array of found rows by select from database.
-	 * 
+	 *
 	 * @access public
 	 * @param string $table The table name.
 	 * @param string $column The columns to fetch.
@@ -380,8 +386,141 @@ class Database
 	}
 
 	/**
+	 * Sets up database changes into schema tables in current database.
+	 *
+	 * @access public
+	 */
+	public function setup()
+	{
+		$arr = \Application::getModels();
+		$tables = [];
+		foreach ($arr as $name)
+		{
+			$table = str_replace('\\Model\\', '\\Model\\Schema\\Table\\', $name);
+			if (class_exists($table))
+			{
+				$tables[] = ['db' => new $table(), 'mo' => new $table()];
+			}
+		}
+
+		$sql = [];
+		foreach ($tables as $set)
+		{
+			$res = Diff::compare($set['mo']->setup(true), $set['db']->setup());
+
+			Console::log($this, get_class($set['mo']));
+			foreach ($res['create'] as $obj)
+			{
+				$query = $this->sqlCreate($set['mo'], $obj);
+				if ($query)
+				{
+					Console::log($this, 'create > ' . $query);
+					$sql[] = $query;
+				}
+			}
+			foreach ($res['remove'] as $obj)
+			{
+				$query = $this->sqlRemove($set['mo'], $obj);
+				if ($query)
+				{
+					Console::log($this, 'remove > ' . $query);
+					$sql[] = $query;
+				}
+			}
+			foreach ($res['change'] as $obj)
+			{
+				if ($obj instanceof Index)
+				{
+					$query = $this->sqlRemove($set['mo'], $obj);
+					if ($query)
+					{
+						Console::log($this, 'remove > ' . $query);
+						$sql[] = $query;
+					}
+					$query = $this->sqlCreate($set['mo'], $obj);
+					if ($query)
+					{
+						Console::log($this, 'create > ' . $query);
+						$sql[] = $query;
+					}
+				}
+				else
+				{
+					$query = $this->sqlChange($set['mo'], $obj);
+					if ($query)
+					{
+						Console::log($this, 'change > ' . $query);
+						$sql[] = $query;
+					}
+				}
+			}
+		}
+		foreach ($sql as $query)
+		{
+			$this->execute($query);
+		}
+	}
+
+	protected function sqlCreate(Table $Table, $Object)
+	{
+		$sql = '';
+		if ($Object instanceof Table)
+		{
+			$sql = 'create table ' . $this->map($Table->getName()) . "(\n";
+			foreach ($Table->getColumns() as $Field)
+			{
+				$sql .= $Field->sql() . ",\n";
+			}
+			foreach ($Table->getColumns(true) as $Index)
+			{
+				$sql .= $Index->sql() . ",\n";
+			}
+			$sql = rtrim($sql, ",\n") . "\n";
+			$sql .= ')';
+		}
+		if ($Object instanceof Field)
+		{
+			$sql = 'alter table ' . $this->map($Table->getName()) . ' add column ' . $this->map($Object->name) . ' ' . $Object->sql();
+		}
+		if ($Object instanceof Index)
+		{
+			$sql = 'alter table ' . $this->map($Table->getName()) . ' add ' . $Object->sql();
+		}
+		return $sql;
+	}
+
+	protected function sqlRemove(Table $Table, $Object)
+	{
+		$sql = '';
+		if ($Object instanceof Table)
+		{
+			$sql = 'drop table ' . $this->map($Table->getName());
+		}
+		if ($Object instanceof Field)
+		{
+			$sql = 'alter table ' . $this->map($Table->getName()) . ' drop column ' . $this->map($Object->name);
+		}
+		if ($Object instanceof Index)
+		{
+			$sql = 'alter table ' . $this->map($Table->getName()) . ' drop index ' . $this->map($Object->name);
+		}
+		return $sql;
+	}
+
+	protected function sqlChange(Table $Table, $Object)
+	{
+		$sql = '';
+		if ($Object instanceof Field)
+		{
+			$sql = 'alter table ' . $this->map($Table->getName()) . ' change column ' . $this->map($Object->name)
+			 	. ' ' . $this->map($Object->name) . ' ' . $Object->sql();
+		}
+		return $sql;
+	}
+
+	/**
 	 * The function returns last error code.
-	 * 
+	 *
 	 * @access public
 	 * @param bool $text If TRUE return as text, otherwise as code.
 	 * @return string The last error code.
@@ -399,10 +538,10 @@ class Database
 		}
 		return $this->dbn->errorCode();
 	}
-	
+
 	/**
 	 * The function returns last query.
-	 * 
+	 *
 	 * @access public
 	 * @return string The query.
 	 */
@@ -416,10 +555,10 @@ class Database
 		}
 		return $this->lastQuery;
 	}
-	
+
 	/**
 	 * The function returns array of all queries executed in current object.
-	 * 
+	 *
 	 * @access public
 	 * @return array The array of queries.
 	 */
@@ -430,7 +569,7 @@ class Database
 
 	/**
 	 * The function returns status of connection.
-	 * 
+	 *
 	 * @access public
 	 * @return string The status.
 	 */
@@ -442,6 +581,5 @@ class Database
 		}
 		return "Not connected\n";
 	}
-	
-}
 
+}

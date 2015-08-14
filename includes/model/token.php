@@ -9,9 +9,15 @@ class Token extends \Core\Object
 	public $object;
 	public $object_id;
 
-	public function getTableName() { return 'tokens'; }
+	public function getTableName()
+	{
+		return 'tokens';
+	}
 
-	public function getPrimary() { return ['id']; }
+	public function getPrimary()
+	{
+		return ['id'];
+	}
 
 	public function generate()
 	{
@@ -34,7 +40,7 @@ class Token extends \Core\Object
 		{
 			$Token->generate();
 		} while ($Token->hasCopy());
-		
+
 		if ($Token->saveNew())
 		{
 			return $Token;
