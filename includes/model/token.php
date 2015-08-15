@@ -1,9 +1,43 @@
 <?
 
+namespace Model\Schema\Table;
+
+class Token extends \Core\Database\Schema\Table
+{
+
+	public function getName()
+	{
+		return 'tokens';
+	}
+
+	protected function getFields()
+	{
+		return [
+			'id'          => ['char(40)', 'not null'],
+			'object'      => ['char(40)', 'not null'],
+			'object_id'   => ['int', 'not null'],
+			'expire_at'   => ['timestamp'],
+			'expire_time' => ['int', 'not null', 'default "' . \Model\Token::EXPIRE_TIME . '"']
+		];
+	}
+
+	protected function getIndexes()
+	{
+		return [
+			['PRIMARY', 'id']
+		];
+	}
+
+}
+
 namespace Model;
+
+use \Helper\Date as Date;
 
 class Token extends \Core\Object
 {
+
+	const EXPIRE_TIME = 3600;
 
 	public $id;
 	public $object;
@@ -46,6 +80,34 @@ class Token extends \Core\Object
 			return $Token;
 		}
 		return false;
+	}
+
+	/**
+	 * Authorises by token id. Returns object attached to current token.
+	 *
+	 * @static
+	 * @access public
+	 * @param string $id The token id.
+	 * @param string $class The class name attached to token.
+	 * @return \Model Model attached to token on success, NULL on failure.
+	 */
+	public static function auth($id, $class = null)
+	{
+		$Token = self::model()->findItem(['id = ' . $id]);
+		if ($Token->id && (null === $class || $class == $Token->object))
+		{
+			if ($Token->expire_at >= Date::encode())
+			{
+				$Token->expire_at = Date::encode(time() + $Token->expire_time);
+				$Token->save();
+				return $Token->getObject();
+			}
+			else
+			{
+				$Token->drop();
+			}
+		}
+		return null;
 	}
 
 }

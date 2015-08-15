@@ -20,7 +20,9 @@ class Field
 		'YEAR'               => 4
 	];
 
-	private $table;
+	private
+		$table,
+		$has_changed = false;
 
 	public
 		$name,
@@ -30,6 +32,7 @@ class Field
 		$key,
 		$default,
 		$auto_increment,
+		$extra,
 		$comment;
 
 	public function __construct(Table $table, $name = null, $data = null)
@@ -59,6 +62,7 @@ class Field
 		$this->key            = $data['Key'];
 		$this->default        = $data['Default'];
 		$this->auto_increment = strtolower($data['Extra']) == 'auto_increment';
+		$this->extra          = $this->auto_increment ? '' : strtoupper($data['Extra']);
 		$this->comment        = '' == $data['Comment'] ? null : $data['Comment'];
 	}
 
@@ -91,6 +95,10 @@ class Field
 			else if (strtolower($option) == 'auto_increment')
 			{
 				$this->auto_increment = true;
+			}
+			else if (preg_match('/on update current_timestamp/i', $option))
+			{
+				$this->extra = 'ON UPDATE CURRENT_TIMESTAMP';
 			}
 			else if (preg_match('/^comment (.+)$/i', $option, $res))
 			{
@@ -125,30 +133,44 @@ class Field
 		return implode(' ', $arr);
 	}
 
-	public function isEmpty()
+	public function forceChange()
 	{
-		return null === $this->type;
+		$this->has_changed = false;
+	}
+
+	public function hasChanged()
+	{
+		return $this->has_changed;
 	}
 
 	public function sql()
 	{
 		$options = [];
 		$options[] = $this->decodeType();
-		if ($this->collation)
+		if (preg_match('/CHAR|TEXT|ENUM|SET/i', $this->type))
 		{
-			$options[] = $this->collation;
+			$collation = $this->collation ? $this->collation : \Core\Database::getInstance()->getDefaultCollation();
+			$options[] = strtoupper($collation);
 		}
-		if (is_bool($this->null))
-		{
-			$options[] = $this->null ? 'NULL' : 'NOT NULL';
-		}
+		$options[] = !$this->null ? 'NOT NULL' : 'NULL';
 		if ($this->auto_increment)
 		{
-			$options[] = 'auto_increment';
+			$options[] = 'AUTO_INCREMENT';
 		}
 		if (null !== $this->default)
 		{
-			$options[] = 'default "' . addslashes($this->default) . '"';
+			if ('CURRENT_TIMESTAMP' == strtoupper($this->default))
+			{
+				$options[] = 'default CURRENT_TIMESTAMP';
+			}
+			else
+			{
+				$options[] = 'default "' . addslashes($this->default) . '"';
+			}
+		}
+		if ($this->extra)
+		{
+			$options[] = $this->extra;
 		}
 		if (null !== $this->comment)
 		{

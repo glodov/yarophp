@@ -10,13 +10,13 @@ namespace Startup;
 class Config
 {
 
-	public function __construct()
+	public function __construct(\Application $App)
 	{
-		$time = \Helper\File::filemtime(\Application::dirConfig());
-		if (false === ($files = \Application::cacheGet($this, $time)))
+		$time = \Helper\File::filemtime($App::dirConfig());
+		if (false === ($files = $App::cacheGet($this, $time)))
 		{
 			$time = false;
-			$files = glob(\Application::dirConfig().'/*');
+			$files = glob($App::dirConfig().'/*');
 		}
 		foreach ($files as $file)
 		{
@@ -34,13 +34,14 @@ class Config
 			}
 			else
 			{
-				\Application::log($this, 'Uknown filetype: '.$file);
+				\Helper\Console::log('Uknown filetype: '.$file);
 			}
 		}
 		if (!$time)
 		{
-			\Application::cachePut($this, $files);
+			$App::cachePut($this, $files);
 		}
+		$App->charset(\Core\Config::get('charset@db', 'utf8'));
 	}
 
 	/**
@@ -66,7 +67,7 @@ class Config
 			}
 			else
 			{
-				\Application::log($this, 'Line #'.($i + 1).' in '.basename($file));
+				\Helper\Console::log('Line #'.($i + 1).' in '.basename($file));
 			}
 		}
 	}
@@ -85,4 +86,4 @@ class Config
 
 }
 
-new Config();
+new Config($this);

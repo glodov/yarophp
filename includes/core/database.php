@@ -19,7 +19,8 @@ class Database
 
 	private $log = [];
 
-	private $dbn, $lastQuery, $currentError;
+	private $dbn, $lastQuery, $currentError,
+		$name, $user, $host, $password, $persistent, $charset, $mode, $collation;
 
 	private static $logDisabled = false;
 	private static $instance;
@@ -29,8 +30,16 @@ class Database
 	 *
 	 * @access private
 	 */
-	private function __construct()
+	private function __construct(array $data = [])
 	{
+		$options = ['name', 'user', 'password', 'host', 'persistent', 'charset', 'collation', 'mode'];
+		foreach ($options as $key)
+		{
+			if (array_key_exists($key, $data))
+			{
+				$this->$key = $data[$key];
+			}
+		}
 		$this->open();
 	}
 
@@ -49,13 +58,14 @@ class Database
 	 *
 	 * @static
 	 * @access public
+	 * @param array $options The options.
 	 * @return object The Database object.
 	 */
-	public static function getInstance()
+	public static function getInstance(array $options = [])
 	{
 		if ( self::$instance === null )
 		{
-            self::$instance = new self();
+            self::$instance = new self($options);
         }
         return self::$instance;
 	}
@@ -81,25 +91,45 @@ class Database
 	 */
 	public function open()
 	{
-		$dsn = 'mysql:dbname='.Config::get('name@db').';host='.Config::get('host@db').';';
-		$user = Config::get('user@db');
-		$password = Config::get('pass@db');
+		$dsn = 'mysql:dbname=' . $this->name . ';host=' . $this->host . ';';
 		$options = [];
-		if (Config::get('pers@db'))
+		if ($this->persistent)
 		{
 			$options[\PDO::ATTR_PERSISTENT] = true;
 		}
 
 		try {
-			$this->dbn = new \PDO($dsn, $user, $password, $options);
-			$this->execute('set names '.Config::get('char@db', 'utf8'));
-			//$this->execute('set character set '.Config::get('char@db', 'utf8'));
-			$this->execute('set time_zone="'.date('P').'"');
-			$this->execute('set sql_mode=""');
+			$this->dbn = new \PDO($dsn, $this->user, $this->password, $options);
+			$charset = $this->getDefaultCharset();
+			if ($charset)
+			{
+				$this->execute('set names '.$charset);
+			}
+			$this->execute('set time_zone="' . date('P') . '"');
+			$this->execute('set sql_mode="' . $this->mode . '"');
 		} catch (\PDOException $e) {
-			\Application::log($this, $e->getMessage());
+			Console::log($e->getMessage());
 			\Application::halt(500);
 		}
+	}
+
+	public function getDefaultCharset()
+	{
+		if ($this->charset)
+		{
+			return $this->charset;
+		}
+		if ($this->collation)
+		{
+			$arr = explode('_', $this->collation);
+			return $arr[0];
+		}
+		return null;
+	}
+
+	public function getDefaultCollation()
+	{
+		return $this->collation;
 	}
 
 	/**
@@ -408,13 +438,13 @@ class Database
 		{
 			$res = Diff::compare($set['mo']->setup(true), $set['db']->setup());
 
-			Console::log($this, get_class($set['mo']));
+			Console::log(get_class($set['mo']));
 			foreach ($res['create'] as $obj)
 			{
 				$query = $this->sqlCreate($set['mo'], $obj);
 				if ($query)
 				{
-					Console::log($this, 'create > ' . $query);
+					Console::log('create > ' . $query);
 					$sql[] = $query;
 				}
 			}
@@ -423,7 +453,7 @@ class Database
 				$query = $this->sqlRemove($set['mo'], $obj);
 				if ($query)
 				{
-					Console::log($this, 'remove > ' . $query);
+					Console::log('remove > ' . $query);
 					$sql[] = $query;
 				}
 			}
@@ -434,13 +464,13 @@ class Database
 					$query = $this->sqlRemove($set['mo'], $obj);
 					if ($query)
 					{
-						Console::log($this, 'remove > ' . $query);
+						Console::log('remove > ' . $query);
 						$sql[] = $query;
 					}
 					$query = $this->sqlCreate($set['mo'], $obj);
 					if ($query)
 					{
-						Console::log($this, 'create > ' . $query);
+						Console::log('create > ' . $query);
 						$sql[] = $query;
 					}
 				}
@@ -449,7 +479,7 @@ class Database
 					$query = $this->sqlChange($set['mo'], $obj);
 					if ($query)
 					{
-						Console::log($this, 'change > ' . $query);
+						Console::log('change > ' . $query);
 						$sql[] = $query;
 					}
 				}
@@ -457,7 +487,15 @@ class Database
 		}
 		foreach ($sql as $query)
 		{
-			$this->execute($query);
+			$res = $this->execute($query);
+			if (!$res)
+			{
+				$info = $this->dbn->errorInfo();
+				if ('00000' != $info[0])
+				{
+					Console::log(implode(': ', $info));
+				}
+			}
 		}
 	}
 
@@ -469,7 +507,7 @@ class Database
 			$sql = 'create table ' . $this->map($Table->getName()) . "(\n";
 			foreach ($Table->getColumns() as $Field)
 			{
-				$sql .= $Field->sql() . ",\n";
+				$sql .= $this->map($Field->name) . ' ' . $Field->sql() . ",\n";
 			}
 			foreach ($Table->getColumns(true) as $Index)
 			{

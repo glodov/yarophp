@@ -2,6 +2,8 @@
 
 include_once(__DIR__.'/core/autoload.php');
 
+use \Helper\Console as Console;
+
 /**
  * The main application (dispatcher) class.
  *
@@ -15,24 +17,52 @@ include_once(__DIR__.'/core/autoload.php');
  */
 class Application
 {
-
-	private static $log = [];
+	private $response, $charset = 'utf8';
 
 	private function __construct($args)
 	{
 		foreach ($args as $module)
 		{
 			$file = self::fileStartup($module);
-			self::log($this, $file);
+			Console::log('Startup: ' . self::basename($file));
 			file_exists($file) && include($file);
 		}
 	}
 
+	public function setResponse($response)
+	{
+		$this->response = $response;
+	}
+
+	public function getResponse()
+	{
+		return $this->response;
+	}
+
+	public function charset($charset = null)
+	{
+		if (null !== $charset)
+		{
+			$this->charset = $charset;
+		}
+		return $this->charset;
+	}
+
 	public static function run()
 	{
-		\Helper\Console::start();
+		Console::start();
 		self::checkDirectories();
 		return new self(func_get_args());
+	}
+
+	public static function basename($file)
+	{
+		$root = dirname(__DIR__);
+		if (0 === strpos($file, $root))
+		{
+			return str_replace($root, '', $file);
+		}
+		return $file;
 	}
 
 	private static function checkDirectories()
@@ -68,23 +98,15 @@ class Application
 	 */
 	public static function db()
 	{
-		return \Core\Database::getInstance();
-	}
-
-	public static function log($source, $message = '')
-	{
-		self::$log[] = [$source, $message];
-	}
-
-	public static function getLog($divider = "\n")
-	{
-		$result = '';
-		foreach (self::$log as $item)
-		{
-			$name = is_object($item[0]) ? get_class($item[0]) : $item[0];
-			$result .= sprintf('%s: %s', $name, $item[1]) . $divider;
-		}
-		return $result;
+		return \Core\Database::getInstance([
+			'name'       => \Core\Config::get('name@db'),
+			'user'       => \Core\Config::get('user@db'),
+			'password'   => \Core\Config::get('pass@db'),
+			'host'       => \Core\Config::get('host@db'),
+			'persistent' => \Core\Config::get('pers@db'),
+			'charset'    => \Core\Config::get('char@db'),
+			'collation'  => \Core\Config::get('collation@db')
+			]);
 	}
 
 	/**
@@ -151,6 +173,18 @@ class Application
 		$filename = is_object($target)
 			? preg_replace('/[\\\_]+/', '/', get_class($target)) : $target;
 		return self::dirCache().'/'.$filename.'.json';
+	}
+
+	/**
+	 * Returns root project directory.
+	 *
+	 * @static
+	 * @access public
+	 * @return string The directory.
+	 */
+	public static function dirRoot()
+	{
+		return defined('DIR_ROOT') ? DIR_ROOT : dirname(__DIR__);
 	}
 
 	/**

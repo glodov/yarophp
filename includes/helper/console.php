@@ -4,11 +4,13 @@ namespace Helper;
 
 class Console
 {
-    const OUTPUT = 1;
-    const FILE = 3;
-    const MEMORY = 7;
+    const NONE = 0;         // 0000
+    const OUTPUT = 1;       // 0001
+    const FILE = 2;         // 0010
+    const MEMORY = 4;       // 0100
+    const BACKTRACE = 8;    // 1000
 
-    private static $started_at, $log = [], $behavior = self::OUTPUT;
+    private static $started_at, $log = [], $behavior = self::OUTPUT | self::BACKTRACE;
 
     private function getFilePath()
     {
@@ -17,7 +19,10 @@ class Console
 
     public static function start()
     {
-        self::$started_at = microtime(true);
+        if (null === self::$started_at)
+        {
+            self::$started_at = microtime(true);
+        }
     }
 
     public static function behave($behavior = self::OUTPUT)
@@ -25,37 +30,34 @@ class Console
         self::$behavior = $behavior;
     }
 
-    public static function log($source, $data = null)
+    public static function log($data)
     {
-        if (null === self::$started_at)
+        if (self::$behavior === self::NONE)
         {
-            self::start();
-        }
-        $string = '';
-        if (null === $data)
-        {
-            $data = $source;
-        }
-        if (is_array($data))
-        {
-            foreach ($data as $value)
-            {
-                self::log($source, $value);
-            }
             return;
         }
-        if (is_object($source))
+        self::start();
+        $string = $at = $class = '';
+        if (self::in(self::BACKTRACE))
         {
-            $string = get_class($source) . '> ';
+            $trace = debug_backtrace();
+            if ($trace && isset($trace[0]['file']) && isset($trace[0]['line']))
+            {
+                $at = ' @' . \Application::basename($trace[0]['file']) . ':' . $trace[0]['line'];
+            }
         }
-        $string .= $data;
+        if ($class)
+        {
+            $string .= '[' . $class . '] ';
+        }
+        $string .= $data . $at;
         $time = microtime(true) - self::$started_at;
 
-        if (self::OUTPUT === self::$behavior)
+        if (self::in(self::OUTPUT))
         {
             printf("%1.03f %s\n", $time, $string);
         }
-        else if (self::FILE === self::$behavior)
+        else if (self::in(self::FILE))
         {
             file_put_contents(self::getFilePath(), date('d.m.y H:i:s ') . sprintf("%1.03f %s\n", $time, $string), FILE_APPEND);
         }
@@ -63,6 +65,19 @@ class Console
         {
             self::$log[] = ['time' => $time, 'text' => $string];
         }
+    }
+
+    public static function flush()
+    {
+        foreach (self::$log as $log)
+        {
+            printf("%1.03f %s\n", $log['time'], $log['text']);
+        }
+    }
+
+    private static function in($value)
+    {
+        return intval(self::$behavior & $value) > 0;
     }
 
 }

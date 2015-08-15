@@ -45,6 +45,13 @@ abstract class Object
 	public function __construct()
 	{
 		self::$instanceCount++;
+		foreach ($this->getObjectColumns() as $col => $class)
+		{
+			if (!$this->$col)
+			{
+				$this->$col = new $class();
+			}
+		}
 	}
 
 	/**
@@ -64,6 +71,17 @@ abstract class Object
 	}
 
 	/**
+	 * Returns array of columns which stored as serialized objects.
+	 *
+	 * @access public
+	 * @return array The columns.
+	 */
+	public function getObjectColumns()
+	{
+		return [];
+	}
+
+	/**
 	 * The function sets object data array to object.
 	 *
 	 * @access public
@@ -74,20 +92,9 @@ abstract class Object
 	public function set( $data, $forceColumns = false )
 	{
 		$result = array();
-		if ( is_array( $data ) )
+		if ( is_array( $data ) || is_object($data) )
 		{
 			foreach ( $data as $key => $value )
-			{
-				if ( $forceColumns || property_exists( $this, $key ) )
-				{
-					$this->$key = $value;
-					$result[$key] = $value;
-				}
-			}
-		}
-		else if ( is_object( $data ) )
-		{
-			foreach ( get_object_vars( $data ) as $key => $value )
 			{
 				if ( $forceColumns || property_exists( $this, $key ) )
 				{
@@ -154,6 +161,20 @@ abstract class Object
 			}
 		}
 		ksort( $result );
+		return $result;
+	}
+
+	protected function getEncodedFields($changedOnly = false)
+	{
+		$result = $this->getFields($changedOnly);
+		$asObjects = $this->getObjectColumns();
+		foreach ($asObjects as $col => $class)
+		{
+			if (array_key_exists($col, $result) && !is_scalar($result[$col]))
+			{
+				$result[$col] = serialize($result[$col]);
+			}
+		}
 		return $result;
 	}
 
@@ -314,7 +335,7 @@ abstract class Object
 			{
 				$this->flushCache();
 			}
-			$this->db()->update( $this->getTableName(), $this->getFields(true), $this->getPrimaryClause() );
+			$this->db()->update( $this->getTableName(), $this->getEncodedFields(true), $this->getPrimaryClause() );
 			return $this->db()->getError() == '00000';
 		}
 	}
@@ -330,7 +351,7 @@ abstract class Object
 	 */
 	public function saveNew()
 	{
-		$this->db()->insert( $this->getTableName(), $this->getFields() ) > 0;
+		$this->db()->insert( $this->getTableName(), $this->getEncodedFields() ) > 0;
 		if ( $this->db()->getError() == '00000' )
 		{
 			$auto = $this->getAutoincrementField();
@@ -485,51 +506,6 @@ abstract class Object
 	}
 
 	/**
-	 * The function executes query an returns array of objects.
-	 *
-	 * @access public
-	 * @param string $query The SQL query string.
-	 * @param bool $forceColumns If TRUE sets columns for object even if they are not in object keys.
-	 * @return array The result.
-	 */
-	public function query( $query, $forceColumns = false )
-	{
-		$arr = $this->db()->query( $query );
-		$this->showError();
-		return $this->processDbResult( $arr, 'list', null, $forceColumns );
-	}
-
-	/**
-	 * The function processes database result to array of objects.
-	 *
-	 * @access protected
-	 * @param array $data The database result data.
-	 * @param string $type The type of triggered function: item | list | result.
-	 * @param string $className The object class name, by default gets itself class name $this.
-	 * @param bool $forceColumns If TRUE sets columns for object even if they are not in object keys.
-	 */
-	protected function processDbResult( array $data, $type = 'list', $className = null, $forceColumns = false )
-	{
-		if ( !$className )
-		{
-			$className = get_class( $this );
-		}
-		$result = array();
-		foreach ( $data as $item )
-		{
-			$Object = new $className();
-			$Object->set( $item, $forceColumns );
-			$Object->init( $type );
-			$result[] = $Object;
-			if ( $type == 'item' )
-			{
-				break;
-			}
-		}
-		return $result;
-	}
-
-	/**
 	 * The function returns count of object rows with passed clause.
 	 *
 	 * @access public
@@ -548,6 +524,75 @@ abstract class Object
 		}
 		$this->showError();
 		return null;
+	}
+
+	/**
+	 * The function finds and object items with passed clause.
+	 *
+	 * @access public
+	 * @param string $columns The columns to fetch.
+	 * @param array $params The clause.
+	 * @param string $order The order string.
+	 * @param int $offset The offset.
+	 * @param int $limit The limit.
+	 * @return array The array of current class objects.
+	 */
+	public function findArray( $columns = '*', $params = array(), $order = null, $offset = null, $limit = null )
+	{
+		if ( !isset( $columns ) )
+		{
+			$columns = '*';
+		}
+		return $this->db()->select( $this->getTableName(), $columns, $params, $order, $offset, $limit );
+	}
+
+	/**
+	 * The function finds and object items with passed clause.
+	 *
+	 * @access public
+	 * @param string $columns The columns to fetch.
+	 * @param array $params The clause.
+	 * @param string $order The order string.
+	 * @param int $offset The offset.
+	 * @param int $limit The limit.
+	 * @return array The array of current class objects.
+	 */
+	public function findResult( $columns = '*', $params = array(), $order = null, $offset = null, $limit = null )
+	{
+		$result = array();
+		if ( !isset( $columns ) )
+		{
+			$columns = '*';
+		}
+		$arr = $this->db()->select( $this->getTableName(), $columns, $params, $order, $offset, $limit );
+		$this->showError();
+		return $this->processDbResult( $arr, 'result' );
+	}
+
+	public function findCopy($fields = null)
+	{
+		$params = $arr = array();
+		$args = func_get_args();
+		if ( is_array( $fields ) )
+		{
+			$arr = $fields;
+		}
+		else if ( count( $args ) )
+		{
+			$arr = $args;
+		}
+		else
+		{
+			$arr = $this->getPrimary();
+		}
+		foreach ( $arr as $key )
+		{
+			if ( property_exists( $this, $key ) )
+			{
+				$params[] = $key.' = '.$this->$key;
+			}
+		}
+		return $this->findItem( $params );
 	}
 
 	/**
@@ -584,73 +629,60 @@ abstract class Object
 		return $this->findSize( $params ) > 0;
 	}
 
-	public function findCopy($fields = null)
+	/**
+	 * The function executes query an returns array of objects.
+	 *
+	 * @access public
+	 * @param string $query The SQL query string.
+	 * @param bool $forceColumns If TRUE sets columns for object even if they are not in object keys.
+	 * @return array The result.
+	 */
+	public function query( $query, $forceColumns = false )
 	{
-		$params = $arr = array();
-		$args = func_get_args();
-		if ( is_array( $fields ) )
+		$arr = $this->db()->query( $query );
+		$this->showError();
+		return $this->processDbResult( $arr, 'list', null, $forceColumns );
+	}
+
+	/**
+	 * The function processes database result to array of objects.
+	 *
+	 * @access protected
+	 * @param array $data The database result data.
+	 * @param string $type The type of triggered function: item | list | result.
+	 * @param string $className The object class name, by default gets itself class name $this.
+	 * @param bool $forceColumns If TRUE sets columns for object even if they are not in object keys.
+	 */
+	protected function processDbResult( array $data, $type = 'list', $className = null, $forceColumns = false )
+	{
+		if ( !$className )
 		{
-			$arr = $fields;
+			$className = get_class( $this );
 		}
-		else if ( count( $args ) )
+		$result = array();
+		$asObjects = $this->getObjectColumns();
+		foreach ( $data as $item )
 		{
-			$arr = $args;
-		}
-		else
-		{
-			$arr = $this->getPrimary();
-		}
-		foreach ( $arr as $key )
-		{
-			if ( property_exists( $this, $key ) )
+			$Object = new $className();
+			if (count($asObjects))
 			{
-				$params[] = $key.' = '.$this->$key;
+				foreach ($item as $key => $value)
+				{
+					if (array_key_exists($key, $asObjects))
+					{
+						$item[$key] = unserialize($value);
+					}
+				}
+			}
+			$Object->set( $item, $forceColumns );
+			$Object->init( $type );
+			$result[] = $Object;
+			if ( $type == 'item' )
+			{
+				break;
 			}
 		}
-		return $this->findItem( $params );
-	}
-
-	/**
-	 * The function finds and object items with passed clause.
-	 *
-	 * @access public
-	 * @param string $columns The columns to fetch.
-	 * @param array $params The clause.
-	 * @param string $order The order string.
-	 * @param int $offset The offset.
-	 * @param int $limit The limit.
-	 * @return array The array of current class objects.
-	 */
-	public function findResult( $columns = '*', $params = array(), $order = null, $offset = null, $limit = null )
-	{
-		$result = array();
-		if ( !isset( $columns ) )
-		{
-			$columns = '*';
-		}
-		$arr = $this->db()->select( $this->getTableName(), $columns, $params, $order, $offset, $limit );
-		$this->showError();
-		return $this->processDbResult( $arr, 'result' );
-	}
-
-	/**
-	 * The function finds and object items with passed clause.
-	 *
-	 * @access public
-	 * @param string $columns The columns to fetch.
-	 * @param array $params The clause.
-	 * @param string $order The order string.
-	 * @param int $offset The offset.
-	 * @param int $limit The limit.
-	 * @return array The array of current class objects.
-	 */
-	public function findArray( $columns = '*', $params = array(), $order = null, $offset = null, $limit = null )
-	{
-		if ( !isset( $columns ) )
-		{
-			$columns = '*';
-		}
-		return $this->db()->select( $this->getTableName(), $columns, $params, $order, $offset, $limit );
+		return $result;
 	}
 
 	/**
@@ -659,17 +691,6 @@ abstract class Object
 	public function getError()
 	{
 		return $this->db()->getError( true );
-	}
-
-	/**
-	 * The function returns array of rules for object fields.
-	 *
-	 * @access public
-	 * @return array The array of rules.
-	 */
-	public function getTestRules()
-	{
-		return array();
 	}
 
 	/**

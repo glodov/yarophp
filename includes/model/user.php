@@ -74,12 +74,7 @@ class User extends \Core\Object
 
 	public static function auth($token)
 	{
-		$Token = Token::model()->findItem(['id = ' . $token]);
-		if ($Token->id)
-		{
-			return $Token->getObject();
-		}
-		return false;
+		return Token::auth($token, '\\Model\\User');
 	}
 
 	private static function salt()

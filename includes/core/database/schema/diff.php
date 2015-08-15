@@ -44,7 +44,7 @@ class Diff
 				{
 					// change column
 					$Field = self::changeField($Field, $target[$name]);
-					if (!$Field->isEmpty())
+					if ($source[$name]->sql() != $target[$name]->sql())
 					{
 						$change[] = $source[$name];
 					}
@@ -114,6 +114,7 @@ class Diff
 			if ($from->$key !== $value)
 			{
 				$Field->$key = $value;
+				$Field->forceChange();
 			}
 		}
 		$Field->name = $to->name;
@@ -121,6 +122,7 @@ class Diff
 		if ($to->decodeType() != $from->decodeType())
 		{
 			$Field->type = $to->decodeType();
+			$Field->forceChange();
 		}
 		return $Field;
 	}
