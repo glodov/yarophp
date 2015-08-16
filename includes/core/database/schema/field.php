@@ -150,9 +150,16 @@ class Field
 		if (preg_match('/CHAR|TEXT|ENUM|SET/i', $this->type))
 		{
 			$collation = $this->collation ? $this->collation : \Core\Database::getInstance()->getDefaultCollation();
-			$options[] = strtoupper($collation);
+			$options[] = 'COLLATE ' . strtolower($collation);
 		}
-		$options[] = !$this->null ? 'NOT NULL' : 'NULL';
+		if (null === $this->null)
+		{
+			$options[] = 'NULL';
+		}
+		else
+		{
+			$options[] = !$this->null ? 'NOT NULL' : 'NULL';
+		}
 		if ($this->auto_increment)
 		{
 			$options[] = 'AUTO_INCREMENT';

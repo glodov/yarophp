@@ -1,0 +1,64 @@
+/* make sidebar nav vertical */
+.sidebar-nav{
+    .open>.dropdown-menu{
+        position: static;
+        border-radius: 0;
+    }
+    .navbar-toggle{
+        margin: 0;
+        padding: 10px 15px;
+        height: 50px;
+        border-radius: 0;
+        border: 0;
+        background-color: #000;
+        color: #fff;
+    }
+    .navbar-nav li{
+        .fa{
+            width: 18px;
+        }
+    }
+}
+@media (min-width: $screen-sm-min) {
+    .sidebar-nav{
+        .navbar-header{
+            float: none;
+            height: 90px;
+
+            .navbar-brand{
+                display: block;
+                float: none;
+                height: 90px;
+            }
+        }
+    }
+  .sidebar-nav .navbar .navbar-collapse {
+    padding: 0;
+    max-height: none;
+  }
+  .sidebar-nav .navbar ul {
+    float: none;
+  }
+  .sidebar-nav .navbar ul:not {
+    display: block;
+  }
+  .sidebar-nav .navbar li {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li a {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+@media (max-width: $screen-sm-min - 1) {
+    .sidebar-nav{
+        .navbar-header{
+            height: 50px;
+
+            .navbar-brand{
+                padding: 10px 15px 5px;
+            }
+        }
+    }
+}

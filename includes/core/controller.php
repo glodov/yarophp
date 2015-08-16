@@ -131,8 +131,8 @@ abstract class Controller
 	 */
 	protected function outputJSON( $response, $exit = true )
 	{
-		header('Content-Type: application/json; charset=' . \Application::charset());
-		$data = String::json_encode( $response );
+		header('Content-Type: application/json; charset=' . Runtime::get('CHARSET'));
+		$data = json_encode($response);
 		if ( $exit )
 		{
 			echo $data;
@@ -172,6 +172,18 @@ abstract class Controller
 		return eval('return $this->'.$string.';');
 	}
 
+	private function getUncachedFile($file)
+	{
+		$path = \Application::dirRoot() . DIRECTORY_SEPARATOR . 'frontend' . $file;
+		if (0 === strpos($file, '/') && file_exists($path))
+		{
+			$time = filemtime($path);
+			$amp = strpos($file, '?') ? '&' : '?';
+			return $file . $amp . base_convert($time, 10, 36);
+		}
+		return $file;
+	}
+
 	/**
 	 * Attach CSS file to current controller.
 	 *
@@ -185,6 +197,7 @@ abstract class Controller
 		{
 			$file = '/css/'.$file;
 		}
+		$file = $this->getUncachedFile($file);
 		$this->css[$file] = $media;
 	}
 
@@ -201,6 +214,7 @@ abstract class Controller
 		{
 			$file = '/js/'.$file;
 		}
+		$file = $this->getUncachedFile($file);
 		$this->scripts[$file] = $type;
 	}
 

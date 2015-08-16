@@ -493,7 +493,7 @@ class Database
 				$info = $this->dbn->errorInfo();
 				if ('00000' != $info[0])
 				{
-					Console::log(implode(': ', $info));
+					Console::log(implode(': ', $info) . "\n" . $query);
 				}
 			}
 		}

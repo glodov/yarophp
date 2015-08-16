@@ -42,6 +42,7 @@ class Config
 			$App::cachePut($this, $files);
 		}
 		$App->charset(\Core\Config::get('charset@db', 'utf8'));
+		\Core\Runtime::set('CHARSET', $App->charset());
 	}
 
 	/**

@@ -3,6 +3,7 @@
 include_once(__DIR__.'/core/autoload.php');
 
 use \Helper\Console as Console;
+use \Core\Runtime as Runtime;
 
 /**
  * The main application (dispatcher) class.
@@ -78,6 +79,8 @@ class Application
 				exit("Unable to write into $dir");
 			}
 		}
+		Runtime::set('LOCALE_DIR', self::dirRoot() . DIRECTORY_SEPARATOR . 'i18n');
+		Runtime::set('VIEW_DIR', self::dirRoot() . DIRECTORY_SEPARATOR . 'views');
 	}
 
 	public static function halt($errorCode = 404)

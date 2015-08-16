@@ -25,6 +25,10 @@ class Backend extends Base
 		{
 			$result['User'] = $this->getController()->getUser();
 		}
+		if (!array_key_exists('Webpage', $result))
+		{
+			$result['Webpage'] = $this->getController()->getWebpage();
+		}
 		return $result;
 	}
 

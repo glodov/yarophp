@@ -10,6 +10,6 @@ $app = Application::run('cache', 'config', 'database', 'controller');
 
 echo $app->getResponse();
 
-echo '<pre>';
+echo '<pre id="app-log">';
 Console::flush();
 echo '</pre>';
