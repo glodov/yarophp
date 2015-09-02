@@ -13,17 +13,10 @@ namespace Core;
 abstract class Object
 {
 
-<<<<<<< HEAD
 	private static $_instanceCount = 0,
 					$_cache = [],
 					$_cacheDisabled = false,
 					$_dependencies_ids = [];
-
-=======
-	private static $instanceCount = 0,
-					$cache = [],
-					$cacheDisabled = false;
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 	private $_original = null;
 
@@ -34,15 +27,11 @@ abstract class Object
 	 * @access protected
 	 * @return array The primary keys array.
 	 */
-<<<<<<< HEAD
 	protected function getPrimary()
 	{
 		$Table = $this->db()->getSchemaTable($this);
 		return $Table->getPrimary();
 	}
-=======
-	abstract protected function getPrimary();
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 	/**
 	 * The function returns the model table name.
@@ -51,7 +40,6 @@ abstract class Object
 	 * @access protected
 	 * @return string The table name.
 	 */
-<<<<<<< HEAD
 	protected function getTableName()
 	{
 		$Table = $this->db()->getSchemaTable($this);
@@ -63,9 +51,6 @@ abstract class Object
 		$Table = $this->db()->getSchemaTable($this);
 		return $Table->getEnum($field);
 	}
-=======
-	abstract protected function getTableName();
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 	/**
 	 * The object constructor.
@@ -74,11 +59,7 @@ abstract class Object
 	 */
 	public function __construct()
 	{
-<<<<<<< HEAD
 		self::$_instanceCount++;
-=======
-		self::$instanceCount++;
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		foreach ($this->getObjectColumns() as $col => $class)
 		{
 			if (!$this->$col)
@@ -351,7 +332,6 @@ abstract class Object
 		return false;
 	}
 
-<<<<<<< HEAD
 	protected function beforeSave($newItem = false)
 	{
 	}
@@ -361,8 +341,6 @@ abstract class Object
 
 	}
 
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	/**
 	 * The function saves current object to database.
 	 *
@@ -384,11 +362,7 @@ abstract class Object
 				$this->flushCache();
 			}
 			$this->db()->update( $this->getTableName(), $this->getEncodedFields(true), $this->getPrimaryClause() );
-<<<<<<< HEAD
 			$result = $this->db()->getError() == '00000';
-=======
-			return $this->db()->getError() == '00000';
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		}
 		$this->afterSave($result);
 		return $result;
@@ -405,11 +379,8 @@ abstract class Object
 	 */
 	public function saveNew()
 	{
-<<<<<<< HEAD
 		$result = false;
 		$this->beforeSave(true);
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		$this->db()->insert( $this->getTableName(), $this->getEncodedFields() ) > 0;
 		if ( $this->db()->getError() == '00000' )
 		{
@@ -455,14 +426,11 @@ abstract class Object
 	protected function getAutoIncrementField()
 	{
 		return 'id';
-<<<<<<< HEAD
 	}
 
 	protected function myDependencies()
 	{
 		return [];
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	}
 
 	/**
@@ -524,7 +492,6 @@ abstract class Object
 		return $this->db()->update( $this->getTableName(), $fields, $params );
 	}
 
-<<<<<<< HEAD
 	public function hasDependencies()
 	{
 		$name = get_class($this);
@@ -554,8 +521,6 @@ abstract class Object
 		return in_array($this->id, self::$_dependencies_ids[$name]);
 	}
 
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	/**
 	 * The function prints out error if it occured.
 	 *
@@ -929,19 +894,15 @@ abstract class Object
 		return $result;
 	}
 
-<<<<<<< HEAD
 	protected function getFixedFieldsToArray()
 	{
 		return [];
 	}
 
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	/**
 	 * Returns object converted into array.
 	 *
 	 * @access public
-<<<<<<< HEAD
 	 * @param array $only The array of field names to export in array.
 	 * @return array The object data.
 	 */
@@ -1045,27 +1006,6 @@ abstract class Object
 		return $object ? $object : $data;
 	}
 
-=======
-	 * @return array The object data.
-	 */
-	public function toArray()
-	{
-		$reflection = new ReflectionObject($this);
-		$result = [];
-		$fixed = $this->getFixedFieldsToArray();
-		foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC) as $property)
-		{
-			$value = $property->getValue($this);
-			if (is_numeric($value) && !in_array($property->getName(), $fixed))
-			{
-				$value = floatval($value);
-			}
-			$result[$property->getName()] = $value;
-		}
-		return $result;
-	}
-
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	/**
 	 * The function returns last field value in object list.
 	 *

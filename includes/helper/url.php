@@ -94,7 +94,6 @@ namespace Helper
 		}
 
 		/**
-<<<<<<< HEAD
 		 * The function returns TRUE if controller object is current URL.
 		 *
 		 * @static
@@ -105,27 +104,6 @@ namespace Helper
 		public static function on(\Controller\Base $Ctrl)
 		{
 			return Runtime::get('REQUEST_URI') == self::get($Ctrl);
-=======
-		 * The function returns TRUE if Target object is current URL.
-		 *
-		 * @static
-		 * @access public
-		 * @param object $Target The Target.
-		 * @return bool TRUE on success, FALSE on failure.
-		 */
-		public static function on( $Target )
-		{
-			$uri = Runtime::get('REQUEST_URI');
-			if ( $Target instanceof Content_Page )
-			{
-				return $Target->Link == $uri;
-			}
-			if ( $Target instanceof Article )
-			{
-				return $Target->Link == $uri;
-			}
-			return $Target == $uri;
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		}
 
 		/**
@@ -164,11 +142,7 @@ namespace Helper
 
 namespace
 {
-<<<<<<< HEAD
 	function _url(\Core\Controller $Controller, $restorGet = false)
-=======
-	function get_url(\Core\Controller $Controller, $restorGet = false)
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	{
 		return \Helper\URL::get($Controller, $restorGet);
 	}

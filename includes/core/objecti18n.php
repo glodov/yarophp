@@ -12,10 +12,7 @@ namespace Core;
  */
 abstract class ObjectI18n extends Object
 {
-<<<<<<< HEAD
 	private $i18n;
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 	/**
 	 * Returns array of multilanguage columns.
@@ -26,7 +23,6 @@ abstract class ObjectI18n extends Object
 	 */
 	abstract public function getI18nColumns();
 
-<<<<<<< HEAD
 	public function getLocales()
 	{
 		$result = [];
@@ -148,6 +144,4 @@ abstract class ObjectI18n extends Object
 		return \Model\I18n::detach($this);
 	}
 
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 }

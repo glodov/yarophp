@@ -10,11 +10,7 @@ class Console
     const MEMORY = 4;       // 0100
     const BACKTRACE = 8;    // 1000
 
-<<<<<<< HEAD
     private static $started_at, $log = [], $behavior = 9; // works only 5.6+ self::OUTPUT | self::BACKTRACE;
-=======
-    private static $started_at, $log = [], $behavior = self::OUTPUT | self::BACKTRACE;
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
     private function getFilePath()
     {

@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
     "BACKEND_TITLE": "BBA CMS",
     "BTN_LOGIN": "Log in",
     "CANCEL": "Cancel",
@@ -28,14 +27,4 @@
     "PLACEHOLDER_PASSWORD": "Your password",
     "REMEMBER_ME": "Remember me",
     "SAVE": "Save"
-=======
-    "BACKEND_TITLE": "Yaro CMS",
-    "BTN_LOGIN": "Log in",
-    "LOGIN": "Login",
-    "LOGIN_FORM_TITLE": "Sign in",
-    "PASSWORD": "Password",
-    "PLACEHOLDER_LOGIN": "Your login",
-    "PLACEHOLDER_PASSWORD": "Your password",
-    "REMEMBER_ME": "Remember me"
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 }

@@ -1,14 +1,8 @@
 (function() {
 	"use strict";
 
-<<<<<<< HEAD
 	var LoginController = function($scope, Locale, Request, $http, $location) {
 		Locale.load($scope);
-=======
-	var LoginController = ["$scope", "localeFactory", "$http", "$location", function($scope, localeFactory, $http, $location) {
-		localeFactory.add(["Backend"]);
-		localeFactory.load($scope);
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 		$scope.model = {
 			login: "",
@@ -27,34 +21,17 @@
 			if ($scope.form.$invalid)
 				return false;
 
-<<<<<<< HEAD
 			Request.post("login", {model: $scope.model})
 				.then(function(data) {
-=======
-			$http.post(window.backendModuleUrl + '/login', {model: $scope.model})
-				.success(function(data) {
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 					if (data.result && data.token)
 						window.location = window.backendModuleUrl;
 					else if (data.error)
 						alert(data.error);
-<<<<<<< HEAD
 				});
 		};
 	};
 
 	angular.module("loginApp")
 		.controller("LoginController", ["$scope", "Locale", "Request", "$http", "$location", LoginController]);
-=======
-				})
-				.error(function(data) {
-
-				});
-		};
-	}];
-
-	angular.module("loginApp")
-		.controller("LoginController", LoginController);
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 })();

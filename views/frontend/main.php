@@ -1,9 +1,5 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html lang="<?= \Helper\Locale::getPrefix() ?>">
-=======
-<html lang="@todo language">
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">

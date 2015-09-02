@@ -40,7 +40,6 @@ class Config
 		if (!$time)
 		{
 			$App::cachePut($this, $files);
-<<<<<<< HEAD
 		}
 		$App->charset(\Core\Config::get('charset@db', 'utf8'));
 		\Core\Runtime::set('CHARSET', $App->charset());
@@ -48,8 +47,6 @@ class Config
 		foreach (\Core\Config::get('plugins', []) as $dir => $namespace)
 		{
 			\Core\Autoload::add($App::dirPlugins() . DIRECTORY_SEPARATOR . $dir, $namespace);
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		}
 		$App->charset(\Core\Config::get('charset@db', 'utf8'));
 		\Core\Runtime::set('CHARSET', $App->charset());

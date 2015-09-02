@@ -240,14 +240,11 @@ abstract class Controller
 		return $this->scripts;
 	}
 
-<<<<<<< HEAD
 	protected function render($layout = null)
 	{
 		return $this->getView()->render($layout);
 	}
 
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	/**
 	 * The function executes controller built on its name and arguments.
 	 *
@@ -257,11 +254,7 @@ abstract class Controller
 	 * @param mixed $args The arguments array or URI.
 	 * @return string The result of executed controller.
 	 */
-<<<<<<< HEAD
 	public static function executeController( $className, $args = null, $exact = false )
-=======
-	public static function executeController( $className, $args = null )
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	{
 		$Controller = null;
 		if (!is_array($args))
@@ -310,11 +303,7 @@ abstract class Controller
 			Console::log('Found ' . get_class($Controller));
 			return $Controller->runMethod( $res['method'], $res['args'], $res['argsText'] );
 		}
-<<<<<<< HEAD
 		return false;
-=======
-		throw new Exception('Controller ' . $className . ' not found');
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	}
 
 	/**

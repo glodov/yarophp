@@ -14,7 +14,6 @@ class Backend extends Base
 		return parent::getLayoutDir() . DIRECTORY_SEPARATOR . 'backend';
 	}
 
-<<<<<<< HEAD
 	protected function vBody()
 	{
 		$child = strtolower(ltrim(str_replace('View\\Backend', '', get_class($this)), '\\'));
@@ -28,8 +27,6 @@ class Backend extends Base
 		return $this->includeLayout($file);
 	}
 
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	public function get($key = null)
 	{
 		$result = parent::get($key);

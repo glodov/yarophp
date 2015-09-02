@@ -1,50 +1,12 @@
 <?
 
 namespace Model\Schema\Table;
-<<<<<<< HEAD
 
 class Token extends \Core\Database\Schema\Table
-=======
-
-class Token extends \Core\Database\Schema\Table
-{
-
-	public function getName()
-	{
-		return 'tokens';
-	}
-
-	protected function getFields()
-	{
-		return [
-			'id'          => ['char(40)', 'not null'],
-			'object'      => ['char(40)', 'not null'],
-			'object_id'   => ['int', 'not null'],
-			'expire_at'   => ['timestamp'],
-			'expire_time' => ['int', 'not null', 'default "' . \Model\Token::EXPIRE_TIME . '"']
-		];
-	}
-
-	protected function getIndexes()
-	{
-		return [
-			['PRIMARY', 'id']
-		];
-	}
-
-}
-
-namespace Model;
-
-use \Helper\Date as Date;
-
-class Token extends \Core\Object
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 {
 	const EXPIRE_TIME = 3600;
 	const EXPIRE_FOREVER = 31536000; // 365 days
 
-<<<<<<< HEAD
 	public function getName()
 	{
 		return 'tokens';
@@ -85,24 +47,6 @@ class Token extends \Core\Object
 		$object_id,
 		$expire_at,
 		$expire_time;
-=======
-	public
-		$id,
-		$object,
-		$object_id,
-		$expire_at,
-		$expire_time;
-
-	public function getTableName()
-	{
-		return 'tokens';
-	}
-
-	public function getPrimary()
-	{
-		return ['id'];
-	}
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 	public function generate()
 	{

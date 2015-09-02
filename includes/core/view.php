@@ -134,19 +134,12 @@ class View
 		$file = $this->getLayoutPath($layout);
 		$data = array_merge( $this->get(), is_array( $data ) ? $data : array() );
 		extract( $data );
-<<<<<<< HEAD
-=======
-		$file = $this->getLayoutPath($layout);
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		if (!file_exists($file))
 		{
 			\Helper\Console::log('View not found: ' . \Application::basename($file));
 			return null;
 		}
-<<<<<<< HEAD
 		\Helper\Console::log('View loaded: ' . \Application::basename($file));
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		ob_start();
 		include($file);
 		$result = ob_get_contents();

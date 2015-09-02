@@ -75,14 +75,11 @@ abstract class Table
 
 	protected function getModelStructure()
 	{
-<<<<<<< HEAD
 		if (null !== $this->fields && null !== $this->indexes)
 		{
 			return false;
 		}
 		$this->fields = $this->indexes = [];
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		foreach ($this->getFields() as $name => $options)
 		{
 			$this->addField($name, $options);
@@ -91,10 +88,7 @@ abstract class Table
 		{
 			$this->addIndex($name, $options);
 		}
-<<<<<<< HEAD
 		return true;
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	}
 
 	public function addField($name, $data = null)
@@ -112,7 +106,6 @@ abstract class Table
 		return $indexes ? $this->indexes : $this->fields;
 	}
 
-<<<<<<< HEAD
 	public function getPrimary()
 	{
 		$this->getModelStructure();
@@ -126,14 +119,11 @@ abstract class Table
 		return [];
 	}
 
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	public function isEmpty()
 	{
 		return count($this->fields) == 0 && count($this->indexes) == 0;
 	}
 
-<<<<<<< HEAD
 	public function getField($field_name)
 	{
 		$this->getModelStructure();
@@ -164,8 +154,6 @@ abstract class Table
 		return $result;
 	}
 
-=======
->>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	public function __toString()
 	{
 		$string = [get_class($this) . ':'];
