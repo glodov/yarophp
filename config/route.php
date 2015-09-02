@@ -2,8 +2,8 @@
 
 \Core\Config::set([
 	'route' => [
-		'/risks-admin'    => 'Controller\\Backend',
-		'/'               => 'Controller\\Frontend'
+		'/admin-custom-url' => 'Controller\\Backend',
+		'/'                 => 'Controller\\Frontend'
 	],
 	'default@route' => 'Controller\\Frontend'
 ]);

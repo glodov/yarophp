@@ -421,6 +421,7 @@ class Database
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Returns Model\Schema\Table according to current $object.
 	 *
 	 * @access public
@@ -442,6 +443,8 @@ class Database
 	}
 
 	/**
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	 * Sets up database changes into schema tables in current database.
 	 *
 	 * @access public
@@ -452,12 +455,20 @@ class Database
 		$tables = [];
 		foreach ($arr as $name)
 		{
+<<<<<<< HEAD
 			$db = $this->getSchemaTable($name);
 			if (!$db)
 			{
 				continue;
 			}
 			$tables[] = ['db' => $db, 'mo' => clone $db];
+=======
+			$table = str_replace('\\Model\\', '\\Model\\Schema\\Table\\', $name);
+			if (class_exists($table))
+			{
+				$tables[] = ['db' => new $table(), 'mo' => new $table()];
+			}
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		}
 
 		$sql = [];

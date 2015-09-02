@@ -1,5 +1,6 @@
 <?
 
+<<<<<<< HEAD
 namespace Controller
 {
 	abstract class Base extends \Core\Controller
@@ -57,4 +58,18 @@ namespace
 	{
 		return \Controller\Base::getUrl($target, $locale);
 	}
+=======
+namespace Controller;
+
+abstract class Base extends \Core\Controller
+{
+
+	protected function redirect($link = '')
+	{
+		$url = rtrim(\Helper\URL::get($this), '/') . '/' . ltrim($link, '/');
+		header('Location: ' . rtrim($url, '/'));
+		exit;
+	}
+
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 }

@@ -3,19 +3,28 @@
 namespace Controller;
 
 use \Model\User as User;
+<<<<<<< HEAD
 use \Helper\Request as Request;
 use \Helper\URL as URL;
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 class Backend extends Base
 {
 	private $webpage;
 
+<<<<<<< HEAD
 	public function isAccess($method = null, \Model\User $User = null)
 	{
 		if (null === $User)
 		{
 			$User = $this->getUser();
 		}
+=======
+	public function isAccess($method = null)
+	{
+		$User = $this->getUser();
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		if (!$User->id || $User->level < User::LEVEL_MODERATOR)
 		{
 			return in_array(strtolower($method), ['login']);
@@ -29,6 +38,7 @@ class Backend extends Base
 
 	public function noAccess()
 	{
+<<<<<<< HEAD
 		if ($this->isAjax())
 		{
 
@@ -37,6 +47,8 @@ class Backend extends Base
 		{
 			return $this->redirect('login');
 		}
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	}
 
 	public function noMethod()
@@ -67,18 +79,26 @@ class Backend extends Base
 	{
 		\Helper\Console::log('Loaded: ' . $method . '(' . implode(', ', $args) . ')');
 		$this->attachScript('/plugins/bower_components/jquery/dist/jquery.min.js');
+<<<<<<< HEAD
 		$this->attachScript('/plugins/bower_components/jquery-ui/jquery-ui.min.js');
 		$this->attachScript('/plugins/bower_components/moment/moment.js');
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		$this->attachScript('/js/bootstrap.min.js');
 		$this->attachScript('/plugins/bower_components/angular/angular.min.js');
 		$this->attachScript('/plugins/bower_components/angular-bootstrap/ui-bootstrap.min.js');
 		$this->attachScript('/plugins/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js');
+<<<<<<< HEAD
 		$this->attachScript('/plugins/bower_components/angular-ui-sortable/sortable.min.js');
 		$this->attachScript('/plugins/bower_components/ngstorage/ngStorage.min.js');
 		$this->attachScript('/plugins/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js');
 
 		$this->attachCSS('backend.css');
 		$this->attachCSS('/plugins/bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css');
+=======
+
+		$this->attachCSS('backend.css');
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		$this->attachAngular('default');
 
 		\Helper\Locale::load('Backend');
@@ -93,6 +113,7 @@ class Backend extends Base
 		}
 	}
 
+<<<<<<< HEAD
 	protected function outputJSON($response, $exit = true)
 	{
 		if (!is_object($response))
@@ -135,11 +156,14 @@ class Backend extends Base
 		return $result;
 	}
 
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	public function getUser()
 	{
 		return \Core\Runtime::get('USER');
 	}
 
+<<<<<<< HEAD
 	private function getMenu()
 	{
 		return [
@@ -163,6 +187,11 @@ class Backend extends Base
 	public function index()
 	{
 		return $this->render();
+=======
+	public function index()
+	{
+		return $this->getView()->render();
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	}
 
 	public function login()
@@ -171,12 +200,17 @@ class Backend extends Base
 		{
 			return $this->redirect();
 		}
+<<<<<<< HEAD
 		if ($model = Request::get('model'))
+=======
+		if ($model = \Helper\Request::get('model'))
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		{
 			$model = (object)$model;
 			$response = (object)['result' => false];
 			if ($Token = User::login($model->login, $model->password, $model->remember))
 			{
+<<<<<<< HEAD
 				$User = $Token->getObject();
 				if (!$User->is_active)
 				{
@@ -193,15 +227,26 @@ class Backend extends Base
 					header('HTTP/1.1 403 Forbidden');
 					$response->error = _t('ERROR_FORBIDDEN');
 				}
+=======
+				$response->result = true;
+				$response->token = $Token->id;
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 			}
 			else
 			{
 				$response->error = _t('ERROR_CREDENTIALS');
 			}
+<<<<<<< HEAD
 			return parent::outputJSON($response);
 		}
 		$this->attachAngular('login');
 		return $this->render('login');
+=======
+			return $this->outputJSON($response);
+		}
+		$this->attachAngular('login');
+		return $this->getView()->render('login');
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	}
 
 	public function logout()
@@ -210,6 +255,7 @@ class Backend extends Base
 		return $this->redirect('login');
 	}
 
+<<<<<<< HEAD
 	public function json()
 	{
 		$response = (object)[];
@@ -230,4 +276,6 @@ class Backend extends Base
 		$response->title = $this->getTitle();
 		return $this->outputJSON($response);
 	}
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 }

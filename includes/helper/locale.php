@@ -285,7 +285,11 @@ namespace
 			$args = func_get_args();
 			for ( $i = 1; $i < count( $args ); $i++ )
 			{
+<<<<<<< HEAD
 				$repl['{'.$i.'}'] = $args[ $i ];
+=======
+				$repl['{arg'.$i.'}'] = $args[ $i ];
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 			}
 			$str = strtr( $str, $repl );
 		}

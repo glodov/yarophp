@@ -14,6 +14,7 @@ class Webpage extends \Core\Database\Schema\Table
 	protected function getFields()
 	{
 		return [
+<<<<<<< HEAD
 			'id'         => '*id',
 			'title'      => ['varchar(64)', 'not null'],
 			'url'        => ['varchar(100)', 'not null'],
@@ -21,6 +22,12 @@ class Webpage extends \Core\Database\Schema\Table
 			'seo'        => ['text'],
 			'content'    => ['mediumtext'],
 			'is_active'  => ['tinyint', 'default 0'],
+=======
+			'id'        => '*id',
+			'title'     => ['varchar(64)', 'not null'],
+			'seo'       => ['text'],
+			'content'   => ['mediumtext'],
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 			'created_at'   => ['timestamp', 'default current_timestamp'],
 			'published_at' => ['timestamp', 'null'],
@@ -32,7 +39,11 @@ class Webpage extends \Core\Database\Schema\Table
 	protected function getIndexes()
 	{
 		return [
+<<<<<<< HEAD
 			['url'],
+=======
+			['title'],
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 			['published_at']
 		];
 	}
@@ -46,6 +57,7 @@ class Webpage extends \Core\ObjectI18n
 	public
 		$id,
 		$title,
+<<<<<<< HEAD
 		$url,
 		$controller,
 		$seo,
@@ -55,16 +67,25 @@ class Webpage extends \Core\ObjectI18n
 		$modified_at,
 		$expire_at,
 		$is_active;
+=======
+		$seo,
+		$content;
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 	public function getObjectColumns()
 	{
 		return [
+<<<<<<< HEAD
 			'seo'     => 'Model\\Content\\SEO',
+=======
+			'seo' => '\\Model\\Content\\SEO'
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		];
 	}
 
 	public function getI18nColumns()
 	{
+<<<<<<< HEAD
 		return ['title', 'url', 'seo', 'content', 'is_active'];
 	}
 
@@ -113,6 +134,19 @@ class Webpage extends \Core\ObjectI18n
 			return true;
 		}
 		return false;
+=======
+		return ['title', 'seo', 'content'];
+	}
+
+	protected function getPrimary()
+	{
+		return ['id'];
+	}
+
+	protected function getTableName()
+	{
+		return 'webpages';
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	}
 
 }

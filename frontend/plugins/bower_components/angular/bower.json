@@ -4,6 +4,9 @@
   "main": "./angular.js",
   "ignore": [],
   "dependencies": {
+<<<<<<< HEAD
       "angular-bootstrap-datetimepicker": "latest"
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
   }
 }

@@ -15,9 +15,15 @@ $gray:                   lighten($gray-base, 33.5%) !default; // #555
 $gray-light:             lighten($gray-base, 46.7%) !default; // #777
 $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
 
+<<<<<<< HEAD
 $brand-primary:         #337ab7 !default;
 $brand-success:         #5cb85c !default;
 $brand-info:            #5bc0de !default;
+=======
+$brand-primary:         #8C307E !default; // #337ab7
+$brand-success:         #5cb85c !default;
+$brand-info:            #3393BB !default; // #5bc0de
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
 
@@ -107,9 +113,15 @@ $padding-xs-horizontal:     5px !default;
 $line-height-large:         1.3333333 !default; // extra decimals for Win 8.1 Chrome
 $line-height-small:         1.5 !default;
 
+<<<<<<< HEAD
 $border-radius-base:        4px !default;
 $border-radius-large:       6px !default;
 $border-radius-small:       2px !default;
+=======
+$border-radius-base:        8px !default;
+$border-radius-large:       12px !default;
+$border-radius-small:       6px !default;
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 //** Global color for active items (e.g., navs or dropdowns).
 $component-active-color:    #fff !default;

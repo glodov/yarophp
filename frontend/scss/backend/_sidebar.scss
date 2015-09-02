@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @mixin calc($property, $expression) {
     #{$property}: -webkit-calc(#{$expression});
     #{$property}: calc(#{$expression});
@@ -37,6 +38,10 @@ $sidebar-width-sm: 50px;
         }
     }
 
+=======
+/* make sidebar nav vertical */
+.sidebar-nav{
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
     .open>.dropdown-menu{
         position: static;
         border-radius: 0;
@@ -56,12 +61,15 @@ $sidebar-width-sm: 50px;
         }
     }
 }
+<<<<<<< HEAD
 .sidebar-nav+.main-content{
     margin-left: $sidebar-width;
     padding-top: 71px;
     @include calc(width, "100% - " + $sidebar-width);
     transition: width .5s, left .5s, bottom .5s;
 }
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 @media (min-width: $screen-sm-min) {
     .sidebar-nav{
         .navbar-header{
@@ -94,6 +102,7 @@ $sidebar-width-sm: 50px;
     padding-bottom: 12px;
   }
 }
+<<<<<<< HEAD
 @media (min-width: $screen-sm-min) and (max-width: $screen-md-min - 1) {
     .sidebar-nav{
         width: $sidebar-width-sm;
@@ -116,10 +125,15 @@ $sidebar-width-sm: 50px;
         float: none;
         width: 100%;
 
+=======
+@media (max-width: $screen-sm-min - 1) {
+    .sidebar-nav{
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
         .navbar-header{
             height: 50px;
 
             .navbar-brand{
+<<<<<<< HEAD
                 display: block;
                 padding: 10px 15px 5px;
                 width: 70%;
@@ -129,4 +143,10 @@ $sidebar-width-sm: 50px;
     .sidebar-nav+.main-content{
         width: 100%;
     }
+=======
+                padding: 10px 15px 5px;
+            }
+        }
+    }
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 }

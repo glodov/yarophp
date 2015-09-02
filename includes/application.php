@@ -76,8 +76,12 @@ class Application
 			}
 			if (!is_dir($dir) || !is_writable($dir))
 			{
+<<<<<<< HEAD
 				$rights = substr(sprintf('%o', fileperms($dir)), -4);
 				exit("Unable to write into $dir [$rights]");
+=======
+				exit("Unable to write into $dir");
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 			}
 		}
 		Runtime::set('LOCALE_DIR', self::dirRoot() . DIRECTORY_SEPARATOR . 'i18n');
@@ -175,8 +179,25 @@ class Application
 	public static function fileCache($target)
 	{
 		$filename = is_object($target)
+<<<<<<< HEAD
 			? preg_replace('/[\\\_]+/', DIRECTORY_SEPARATOR, get_class($target)) : $target;
 		return self::dirCache() . DIRECTORY_SEPARATOR . $filename.'.json';
+	}
+
+	/**
+	 * Returns root project directory.
+	 *
+	 * @static
+	 * @access public
+	 * @return string The directory.
+	 */
+	public static function dirRoot()
+	{
+		return defined('DIR_ROOT') ? DIR_ROOT : dirname(__DIR__);
+=======
+			? preg_replace('/[\\\_]+/', '/', get_class($target)) : $target;
+		return self::dirCache().'/'.$filename.'.json';
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	}
 
 	/**
@@ -252,6 +273,18 @@ class Application
 	}
 
 	/**
+	 * Returns logs directory.
+	 *
+	 * @static
+	 * @access public
+	 * @return string The directory.
+	 */
+	public static function dirLogs()
+	{
+		return defined('DIR_LOGS') ? DIR_LOGS : dirname(__DIR__) . '/logs';
+	}
+
+	/**
 	 * Returns startup file path.
 	 *
 	 * @static
@@ -273,7 +306,11 @@ class Application
 	public static function getModels()
 	{
 		$result = [];
+<<<<<<< HEAD
 		$path = __DIR__ . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR;
+=======
+		$path = __DIR__ . '/model/';
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		$Iterator = new RecursiveDirectoryIterator($path);
 		$objects = new RecursiveIteratorIterator($Iterator, RecursiveIteratorIterator::SELF_FIRST);
 		foreach ($objects as $name => $object)
@@ -284,7 +321,11 @@ class Application
 			}
 			$name = strtolower(str_replace($path, '', substr($name, 0, strlen($name) - 4)));
 			$name = str_replace(DIRECTORY_SEPARATOR, '\\', $name);
+<<<<<<< HEAD
 			$name = 'Model\\' . ucwords($name, '\\');
+=======
+			$name = '\\Model\\' . ucwords($name, '\\');
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 			if (class_exists($name))
 			{
 				$result[]= $name;

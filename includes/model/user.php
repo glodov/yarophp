@@ -13,6 +13,7 @@ class User extends \Core\Database\Schema\Table
 	protected function getFields()
 	{
 		return [
+<<<<<<< HEAD
 			'id'         => '*id',
 			'login'      => ['varchar(254)', 'not null'],
 			'password'   => ['varchar(50)'],
@@ -25,6 +26,12 @@ class User extends \Core\Database\Schema\Table
 			'last_name'  => ['varchar(50)'],
 			'email'      => ['varchar(254)'],
 			'address'    => ['text']
+=======
+			'id' => '*id',
+			'login' => ['varchar(100)', 'not null'],
+			'password' => ['varchar(50)', 'not null'],
+			'level' => ['tinyint unsigned', 'not null', 'default 0']
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		];
 	}
 
@@ -32,8 +39,12 @@ class User extends \Core\Database\Schema\Table
 	{
 		return [
 			['unique', 'login'],
+<<<<<<< HEAD
 			['level'],
 			['email']
+=======
+			['level']
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		];
 	}
 
@@ -51,6 +62,7 @@ class User extends \Core\Object
 	// ..
 	const LEVEL_VISITOR = 1;     // 0000 0001
 
+<<<<<<< HEAD
 	public
 		$id,
 		$login,
@@ -93,6 +105,21 @@ class User extends \Core\Object
 		{
 			$this->password = $this->getOriginal('password');
 		}
+=======
+	public $id;
+	public $login;
+	public $level;
+	protected $password;
+
+	public function getTableName()
+	{
+		return 'users';
+	}
+
+	public function getPrimary()
+	{
+		return ['id'];
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	}
 
 	public static function login($login, $password, $remember = false)

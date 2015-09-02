@@ -3,7 +3,10 @@
 namespace Startup;
 
 use \Core\Runtime as Runtime;
+<<<<<<< HEAD
 use \Model\Language as Language;
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 /**
  * Controller startup class.
@@ -17,7 +20,10 @@ class Controller
 	public function __construct(\Application $App)
 	{
 		session_start();
+<<<<<<< HEAD
 		$this->app = $App;
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 		\Helper\Locale::set('en_US');
 
@@ -35,6 +41,7 @@ class Controller
 		Runtime::set('HTTP_PROTOCOL', isset($_SERVER['HTTP_PROTOCOL']) ? $_SERVER['HTTP_PROTOCOL'] : 'http://');
 		Runtime::set('HTTP_HOST', isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost');
 
+<<<<<<< HEAD
 		if ($this->checkBackend($uri))
 		{
 			return $this->run();
@@ -125,6 +132,28 @@ class Controller
 		$response = \Core\Controller::executeController($this->class, $this->slug, $exact);
 		\Helper\Console::log('Route: ' . $this->class);
 		$this->app->setResponse($response);
+=======
+		$class = null;
+		$slug = $uri;
+		foreach (\Core\Config::get('route', []) as $path => $class)
+		{
+			\Helper\URL::map($class, $path);
+			if (0 === strpos(strtolower($uri), strtolower($path)) && in_array(substr($uri, strlen($path), 1), ['/', '?', '']))
+			{
+				$slug = ltrim(substr($uri, strlen($path)), '/');
+				break;
+			}
+		}
+		if (!$class)
+		{
+			$class = \Core\Config::get('default@route', '\\Controller\\Frontend');
+		}
+
+		\Helper\Console::log('Route: ' . $class);
+
+		$response = \Core\Controller::executeController($class, $slug);
+		$App->setResponse($response);
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 	}
 
 }

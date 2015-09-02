@@ -11,8 +11,13 @@
 		<link rel="stylesheet" href="<?= $file ?>" media="<?= $media ?>">
 <? endforeach; ?>
 		<script>
+<<<<<<< HEAD
 			window.backendRootUrl = "<?= _url(new \Controller\Backend) ?>";
 			window.backendModuleUrl = "<?= _url($this->getController()) ?>";
+=======
+			window.backendBaseUrl = "<?= get_url(new \Controller\Backend) ?>";
+			window.backendModuleUrl = "<?= get_url($this->getController()) ?>";
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		</script>
 
 	</head>
@@ -24,7 +29,11 @@
 
 			<form class="form-signin" name="form" novalidate ng-submit="submit()">
 				<div class="text-center">
+<<<<<<< HEAD
 					<a class="logo" href="/"><img src="/img/logo.jpg" alt=""/></a>
+=======
+					<a class="logo" href="/"><img src="/img/backend-logo.png" alt=""/></a>
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 				</div>
 				<h2 class="form-signin-heading text-center">{{t.LOGIN_FORM_TITLE}}</h2>
 				<div class="form-group" ng-class="inputClass('login')">

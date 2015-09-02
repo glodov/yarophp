@@ -1,7 +1,11 @@
 (function(){
 	"use strict";
 
+<<<<<<< HEAD
 	var Locale = function($http) {
+=======
+	var localeFactory = function($http) {
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 		var loaded = {}, modules = [], queue = [], dictionary = {}, fnCallback = null, scope = null;
 
 		var addModule = function(module) {
@@ -31,6 +35,7 @@
 				callback.call();
 				return true;
 			}
+<<<<<<< HEAD
 			// if (typeof loading[path] !== "undefined")
 			// 	return true;
 			// loading[path] = true;
@@ -38,6 +43,11 @@
 				.success(function(data) {
 					loaded[path] = data;
 					// loading[path] = true;
+=======
+			$http.get(path)
+				.success(function(data) {
+					loaded[path] = data;
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 					angular.extend(dictionary, loaded[path]);
 					callback.call();
 				})
@@ -46,6 +56,7 @@
 		return {
 			add: addModule,
 
+<<<<<<< HEAD
 			get: function(word) {
 				if (typeof dictionary[word] == "undefined")
 					return "*" + word + "*";
@@ -53,13 +64,18 @@
 					return dictionary[word];
 			},
 
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 			load: function($scope, locale, fn) {
 				scope = $scope;
 				locale = locale || "en_US";
 				fnCallback = fn;
+<<<<<<< HEAD
 				addModule("Backend");
 				if (window.backendModuleI18n)
 					addModule(backendModuleI18n);
+=======
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 				angular.forEach(modules, function(module) {
 					var path = "/i18n/" + locale + "/" + module + ".json";
 					loadItem(path);
@@ -68,6 +84,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	var Request = function($q, $http, $rootScope) {
 		var post = function(link, data) {
 			var deferred = $q.defer();
@@ -120,5 +137,9 @@
 		.factory("Locale", ["$http", Locale])
 		.factory("Request", ["$q", "$http", "$rootScope", Request])
 		.factory("I18n", I18n);
+=======
+	angular.module("default", [])
+		.factory("localeFactory", ["$http", localeFactory]);
+>>>>>>> 6c8d365d76a90d18270293cbb397398dfec2b14c
 
 })();
