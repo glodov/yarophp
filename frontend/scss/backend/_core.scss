@@ -1,0 +1,24 @@
+.container-block{
+	padding-left: 0;
+	padding-right: 0;
+}
+a{
+	cursor: pointer;
+
+	&.solid{
+		text-decoration: none;
+		span{
+			border-bottom: 1px solid;
+		}
+		&:hover span{
+			border-bottom-color: transparent;
+		}
+	}
+	&.sort{
+		cursor: move;
+	}
+}
+
+#app-log{
+	display: none;
+}

@@ -1,0 +1,132 @@
+@mixin calc($property, $expression) {
+    #{$property}: -webkit-calc(#{$expression});
+    #{$property}: calc(#{$expression});
+}
+
+$sidebar-width: 200px;
+$sidebar-width-sm: 50px;
+
+.sidebar-nav{
+    position: fixed;
+    float: left;
+    width: $sidebar-width;
+    transition: width .5s, left .5s, bottom .5s;
+    z-index: 2;
+
+    li.divider{
+        margin: 15px 0 0;
+        border-bottom: 2px solid #fff;
+    }
+
+    .navbar-default{
+        height: 100%;
+        background-color: $brand-primary;
+        color: #fff;
+
+        .navbar-nav > li > a{
+            color: #fff;
+
+            &:hover{
+                color: $brand-info;
+                background-color: #435280;
+            }
+        }
+        .navbar-nav > .active > a{
+            color: $brand-primary;
+            background-color: #fff;
+        }
+    }
+
+    .open>.dropdown-menu{
+        position: static;
+        border-radius: 0;
+    }
+    .navbar-toggle{
+        margin: 0;
+        padding: 10px 15px;
+        height: 50px;
+        border-radius: 0;
+        border: 0;
+        background-color: #000;
+        color: #fff;
+    }
+    .navbar-nav li{
+        .fa{
+            width: 18px;
+        }
+    }
+}
+.sidebar-nav+.main-content{
+    margin-left: $sidebar-width;
+    padding-top: 71px;
+    @include calc(width, "100% - " + $sidebar-width);
+    transition: width .5s, left .5s, bottom .5s;
+}
+@media (min-width: $screen-sm-min) {
+    .sidebar-nav{
+        .navbar-header{
+            float: none;
+            height: 90px;
+
+            .navbar-brand{
+                display: block;
+                float: none;
+                height: 90px;
+            }
+        }
+    }
+  .sidebar-nav .navbar .navbar-collapse {
+    padding: 0;
+    max-height: none;
+  }
+  .sidebar-nav .navbar ul {
+    float: none;
+  }
+  .sidebar-nav .navbar ul:not {
+    display: block;
+  }
+  .sidebar-nav .navbar li {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li a {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+@media (min-width: $screen-sm-min) and (max-width: $screen-md-min - 1) {
+    .sidebar-nav{
+        width: $sidebar-width-sm;
+
+        .navbar-header{
+            height: 50px;
+
+            .navbar-brand{
+                height: 50px;
+            }
+        }
+    }
+    .sidebar-nav+.main-content{
+        margin-left: $sidebar-width-sm;
+        @include calc(width, "100% - " + $sidebar-width-sm);
+    }
+}
+@media (max-width: $screen-sm-min - 1) {
+    .sidebar-nav{
+        float: none;
+        width: 100%;
+
+        .navbar-header{
+            height: 50px;
+
+            .navbar-brand{
+                display: block;
+                padding: 10px 15px 5px;
+                width: 70%;
+            }
+        }
+    }
+    .sidebar-nav+.main-content{
+        width: 100%;
+    }
+}

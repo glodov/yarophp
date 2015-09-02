@@ -1,0 +1,14 @@
+<IfModule mod_php5.c>
+	php_value short_open_tag 1
+</IfModule>
+
+Options +FollowSymLinks
+
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule .? - [L]
+
+RewriteRule ^(app|css|fonts|js|i18n|img|plugins)/(.+) frontend/$1/$2 [L]
+
+RewriteRule .? index.php [L]

@@ -1,0 +1,20 @@
+{
+    "ADD_WEBPAGE": "Add webpage",
+    "CONTROLLER": "Controller",
+    "CREATED_AT": "Created at",
+    "DEFAULT_TAB": "General",
+    "EDIT_IN_THEME": "Edit in Theme editor",
+    "PLACEHOLDER_SEO_DESCRIPTION": "SEO description",
+    "PLACEHOLDER_SEO_KEYWORDS": "SEO keywords",
+    "PLACEHOLDER_SEO_TITLE": "SEO title",
+    "PLACEHOLDER_TITLE": "Website title",
+    "PLACEHOLDER_URL": "Website url starting from \/",
+    "SEO_DATA": "SEO options",
+    "SEO_DESCRIPTION": "Description",
+    "SEO_KEYWORDS": "Keywords",
+    "SEO_TITLE": "Title",
+    "TITLE": "Title",
+    "URL": "Url",
+    "WEBPAGE": "Webpage",
+    "WEBPAGE_URL": "URL"
+}

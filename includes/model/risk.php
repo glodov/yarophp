@@ -1,5 +1,31 @@
 <?
 
+namespace Model\Schema\Table;
+
+class Risk extends \Core\Database\Schema\Table
+{
+	public function getName()
+	{
+		return 'risks';
+	}
+
+	protected function getFields()
+	{
+		return [
+			'id'          => '*id',
+			'parent_id'   => ['int'],
+			'name'        => ['varchar(150)']
+		];
+	}
+
+	protected function getIndexes()
+	{
+		return [
+			['parent_id']
+		];
+	}
+}
+
 namespace Model;
 
 class Risk extends \Core\Object
@@ -8,10 +34,6 @@ class Risk extends \Core\Object
 	public $id;
 	public $parent_id;
 	public $name;
-
-	public function getTableName() { return 'risks'; }
-
-	public function getPrimary() { return ['id']; }
 
 	public function hasParent()
 	{

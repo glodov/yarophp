@@ -1,0 +1,48 @@
+<div class="panel panel-default languages">
+	<div class="panel-heading">
+		<div class="row">
+			<div class="col-sm-3">
+				<a class="btn btn-sm btn-info" ng-click="add()">
+					<i class="fa fa-plus-circle"></i>
+					<span>{{t.ADD_LANGUAGE}}</span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="panel-body">
+		<table class="table table-striped table-condensed table-hover table-list">
+			<thead>
+				<tr>
+					<th class="col-sort">&nbsp;</th>
+					<th class="col-locale">{{t.LOCALE}}</th>
+					<th class="col-name">{{t.LANGUAGE}}</th>
+					<th class="col-actions">&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody ui-sortable="sortableOptions" ng-model="list">
+				<tr ng-repeat="item in list">
+					<td class="col-sort">
+						<a class="sort">
+							<i class="fa fa-bars"></i>
+						</a>
+					</td>
+					<td class="col-locale">
+						<a ng-click="enable(item)">
+							<active-icon ng-model="item.is_active"></active-icon>
+						</a>
+						<span>{{item.locale}}</span>
+					</td>
+					<td class="col-name">{{item.name}}</td>
+					<td class="col-actions">
+						<button class="btn btn-xs btn-primary" title="{{t.EDIT}}" ng-click="edit(item)">
+							<i class="fa fa-edit"></i>
+						</button>
+						<button class="btn btn-xs btn-danger" title="{{t.DELETE}}" ng-click="delete(item)">
+							<i class="fa fa-trash-o"></i>
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,7 @@
+{
+    "ADD_LANGUAGE": "Add language",
+    "CONFIRM_DELETE_DEPENDENCY": "Are you sure to delete language? It has {1} dependencies.",
+    "LANGUAGE": "Language",
+    "LOCALE": "Locale",
+    "PLACEHOLDER_LANGUAGE": "Language title"
+}

@@ -1,0 +1,270 @@
+[
+  {
+    "locale":"ar_SA",
+    "name":"Arabic (SA)"
+  },
+  {
+    "locale":"ar_DZ",
+    "name":"Arabic (DZ)"
+  },
+  {
+    "locale":"ar_BH",
+    "name":"Arabic (BH)"
+  },
+  {
+    "locale":"ar_EG",
+    "name":"Arabic (EG)"
+  },
+  {
+    "locale":"ar_IQ",
+    "name":"Arabic (IQ)"
+  },
+  {
+    "locale":"ar_JO",
+    "name":"Arabic (JO)"
+  },
+  {
+    "locale":"ar_KW",
+    "name":"Arabic (KW)"
+  },
+  {
+    "locale":"ar_LB",
+    "name":"Arabic (LB)"
+  },
+  {
+    "locale":"ar_LY",
+    "name":"Arabic (LY)"
+  },
+  {
+    "locale":"ar_MA",
+    "name":"Arabic (MA)"
+  },
+  {
+    "locale":"ar_OM",
+    "name":"Arabic (OM)"
+  },
+  {
+    "locale":"ar_QA",
+    "name":"Arabic (QA)"
+  },
+  {
+    "locale":"ar_SY",
+    "name":"Arabic (SY)"
+  },
+  {
+    "locale":"ar_TN",
+    "name":"Arabic (TN)"
+  },
+  {
+    "locale":"ar_AE",
+    "name":"Arabic (U.A.E.)"
+  },
+  {
+    "locale":"ar_YE",
+    "name":"Arabic (YE)"
+  },
+  {
+    "locale":"de_DE",
+    "name":"German (DE)"
+  },
+  {
+    "locale":"de_AT",
+    "name":"German (AT)"
+  },
+  {
+    "locale":"de_LI",
+    "name":"German (LI)"
+  },
+  {
+    "locale":"de_LU",
+    "name":"German (LU)"
+  },
+  {
+    "locale":"de_CH",
+    "name":"German (CH)"
+  },
+  {
+    "locale":"en_GB",
+    "name":"English (GB)"
+  },
+  {
+    "locale":"en_AU",
+    "name":"English (AU)"
+  },
+  {
+    "locale":"en_BZ",
+    "name":"English (BZ)"
+  },
+  {
+    "locale":"en_CA",
+    "name":"English (CA)"
+  },
+  {
+    "locale":"en_IE",
+    "name":"English (IE)"
+  },
+  {
+    "locale":"en_JM",
+    "name":"English (JM)"
+  },
+  {
+    "locale":"en_NZ",
+    "name":"English (NZ)"
+  },
+  {
+    "locale":"en_PH",
+    "name":"English (PH)"
+  },
+  {
+    "locale":"en_ZA",
+    "name":"English (ZA)"
+  },
+  {
+    "locale":"en_TT",
+    "name":"English (TT)"
+  },
+  {
+    "locale":"en_US",
+    "name":"English (US)"
+  },
+  {
+    "locale":"en_ZW",
+    "name":"English (ZW)"
+  },
+  {
+    "locale":"es_ES",
+    "name":"Spanish (ES)"
+  },
+  {
+    "locale":"es_AR",
+    "name":"Spanish (AR)"
+  },
+  {
+    "locale":"es_BO",
+    "name":"Spanish (BO)"
+  },
+  {
+    "locale":"es_CL",
+    "name":"Spanish (CL)"
+  },
+  {
+    "locale":"es_CO",
+    "name":"Spanish (CO)"
+  },
+  {
+    "locale":"es_CR",
+    "name":"Spanish (CR)"
+  },
+  {
+    "locale":"es_DO",
+    "name":"Spanish (DO)"
+  },
+  {
+    "locale":"es_EC",
+    "name":"Spanish (EC)"
+  },
+  {
+    "locale":"es_SV",
+    "name":"Spanish (SV)"
+  },
+  {
+    "locale":"es_GT",
+    "name":"Spanish (GT)"
+  },
+  {
+    "locale":"es_HN",
+    "name":"Spanish (HN)"
+  },
+  {
+    "locale":"es_MX",
+    "name":"Spanish (MX)"
+  },
+  {
+    "locale":"es_NI",
+    "name":"Spanish (NI)"
+  },
+  {
+    "locale":"es_PA",
+    "name":"Spanish (PA)"
+  },
+  {
+    "locale":"es_PY",
+    "name":"Spanish (PY)"
+  },
+  {
+    "locale":"es_PE",
+    "name":"Spanish (PE)"
+  },
+  {
+    "locale":"es_PR",
+    "name":"Spanish (PR)"
+  },
+  {
+    "locale":"es_US",
+    "name":"Spanish (US)"
+  },
+  {
+    "locale":"es_UY",
+    "name":"Spanish (UY)"
+  },
+  {
+    "locale":"es_VE",
+    "name":"Spanish (VE)"
+  },
+  {
+    "locale":"fi_FI",
+    "name":"Finnish"
+  },
+  {
+    "locale":"fr_FR",
+    "name":"French (FR)"
+  },
+  {
+    "locale":"fr_BE",
+    "name":"French (BE)"
+  },
+  {
+    "locale":"fr_CA",
+    "name":"French (CA)"
+  },
+  {
+    "locale":"fr_LU",
+    "name":"French (LU)"
+  },
+  {
+    "locale":"fr_MC",
+    "name":"French (MC)"
+  },
+  {
+    "locale":"fr_CH",
+    "name":"French (CH)"
+  },
+  {
+    "locale":"it_IT",
+    "name":"Italian (IT)"
+  },
+  {
+    "locale":"it_CH",
+    "name":"Italian (CH)"
+  },
+  {
+    "locale":"nl_NL",
+    "name":"Dutch (NL)"
+  },
+  {
+    "locale":"nl_BE",
+    "name":"Dutch (BE)"
+  },
+  {
+    "locale":"ru_RU",
+    "name":"Russian (RU)"
+  },
+  {
+    "locale":"ru_MD",
+    "name":"Russian (MD)"
+  },
+  {
+    "locale":"ru_UA",
+    "name":"Russian (UA)"
+  }
+]

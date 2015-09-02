@@ -1,5 +1,32 @@
 <?
 
+namespace Model\Schema\Table;
+
+class Result extends \Core\Database\Schema\Table
+{
+	public function getName()
+	{
+		return 'results';
+	}
+
+	protected function getFields()
+	{
+		return [
+			'id'          => '*id',
+			'area_id'     => ['int'],
+			'risk_id'     => ['int'],
+			'probability' => ['int'],
+			'impact'      => ['int'],
+			'severity'    => ['int']
+		];
+	}
+
+	protected function getIndexes()
+	{
+		return [];
+	}
+}
+
 namespace Model;
 
 class Result extends \Core\Object
@@ -11,10 +38,6 @@ class Result extends \Core\Object
 	public $probability;
 	public $impact;
 	public $severity;
-
-	public function getTableName() { return 'results'; }
-
-	public function getPrimary() { return ['id']; }
 
 	public function getArea()
 	{

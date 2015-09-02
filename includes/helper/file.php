@@ -3,24 +3,24 @@
 namespace Helper;
 
 /**
- * The class File works with filesystem. It helps to detect files mimetype, 
+ * The class File works with filesystem. It helps to detect files mimetype,
  * extension, reads files in directory, etc.
- * 
+ *
  * @author Yarick
  * @version 0.2
  */
 class File
 {
-	
+
 	private static $uploadError = null;
-	
+
 	/**
 	 * The function returns the extension of the filename.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param string $file The filename or path of the file.
-	 * @param bool $lowerCase The flag of extension case. If TRUE 
+	 * @param bool $lowerCase The flag of extension case. If TRUE
 	 * extensions will be represented in lower case.
 	 * @return string The extension of the filename.
 	 */
@@ -29,10 +29,10 @@ class File
 		$ext = substr( $filename, strrpos( $filename, '.' ) + 1 );
 		return $lowerCase ? strtolower( $ext ) : $ext;
 	}
-	
+
 	/**
 	 * The function returns mimetype detected by file extension.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param string $filename The filename or path of the file.
@@ -184,10 +184,10 @@ class File
 		$ext = self::extension( $filename, true );
 		return isset( $types[ $ext ] ) ? $types[ $ext ] : 'application/unknown';
 	}
-	
+
 	/**
 	 * The function returns filesize in human format, like 1 392,44M
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param int $value The filesize.
@@ -206,11 +206,11 @@ class File
 		}
 		return number_format( $value / $params[0], 2, ',', ' ' ).$params[1];
 	}
-	
+
 	/**
 	 * The function restores path of file (create folder if it does not exist)
 	 * with current permissions.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param string $path The path to the file.
@@ -224,10 +224,10 @@ class File
 		}
 		return true;
 	}
-	
+
 	/**
 	 * The function execute command depends on server OS.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param string $cmd The command to execute.
@@ -246,14 +246,14 @@ class File
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * The function sends file to output.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param string $file The path to file.
-	 * @param string $name The name of file which will be sent to headers, if 
+	 * @param string $name The name of file which will be sent to headers, if
 	 * empty then basename of $file will be taken.
 	 */
 	public static function output( $file, $name = null )
@@ -275,10 +275,10 @@ class File
 	    header( 'Content-Length: ' . filesize( $file ) );
 		return readfile( $file );
 	}
-	
+
 	/**
 	 * The function converts multiple file array to single for uploading.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param array $file The posted file array.
@@ -292,12 +292,12 @@ class File
 			'tmp_name'	=> $file['tmp_name'][ $index ],
 			'error'		=> $file['error'][ $index ],
 			'size'		=> $file['size'][ $index ],
-		);		
+		);
 	}
 
 	/**
-	 * This function returns the time when the data blocks of a file/directory were 
-	 * being written to, that is, the time when the content of the file/directory 
+	 * This function returns the time when the data blocks of a file/directory were
+	 * being written to, that is, the time when the content of the file/directory
 	 * was changed.
 	 *
 	 * @static
@@ -320,5 +320,41 @@ class File
 		}
 		return filemtime($file);
 	}
-	
+
+	/**
+	 * Reads config file and returns associative array.
+	 *
+	 * @static
+	 * @access public
+	 * @param string $file The file path.
+	 * @return array The result.
+	 */
+	public static function readConfig($file)
+	{
+		$result = [];
+		switch (strtolower(substr( $file, -4 )))
+		{
+			case '.php':
+				$result = include( $file );
+				break;
+
+			case '.ini':
+				foreach ( file($file) as $line )
+				{
+					if ( substr( $line, 0, 1 ) == '#' )
+					{
+						continue;
+					}
+					$arr = explode( '=', $line, 2 );
+					if ( count( $arr ) != 2 )
+					{
+						continue;
+					}
+					$result[trim($arr[0])] = trim($arr[1]);
+				}
+				break;
+		}
+		return $result;
+	}
+
 }

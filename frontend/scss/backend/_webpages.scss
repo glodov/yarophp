@@ -1,0 +1,24 @@
+.webpages{
+	.table-list{
+		table-layout: fixed;
+
+		.col-name{
+			width: 40%;
+		}
+		.col-url{
+			width: 40%;
+		}
+		.col-controller{
+			width: 20%;
+		}
+		.col-actions{
+			text-align: right;
+			width: 90px;
+		}
+	}
+}
+.webpage-modal{
+	.tab-pane{
+		padding-top: 15px;
+	}
+}

@@ -1,0 +1,49 @@
+.users{
+	.table-list{
+		table-layout: fixed;
+
+		.col-login, .col-name, .col-locale, .col-phone, .col-email{
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+
+		.col-login{
+			width: 30%;
+		}
+		.col-name{
+			width: 40%;
+		}
+		.col-locale{
+			width: 150px;
+		}
+		.col-phone{
+			width: 200px;
+		}
+		.col-email{
+			width: 30%;
+		}
+		.col-actions{
+			width: 70px;
+			text-align: right;
+		}
+
+		@media (max-width: $screen-lg-min) {
+			.col-locale{
+				display: none;
+				width: 0;
+			}
+		}
+		@media (max-width: $screen-md-min) {
+			.col-phone{
+				display: none;
+				width: 0;
+			}
+		}
+	}
+}
+.user-modal{
+	.tab-pane{
+		padding-top: 15px;
+	}
+}

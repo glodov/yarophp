@@ -2,34 +2,86 @@
 
 include_once(__DIR__.'/core/autoload.php');
 
+use \Helper\Console as Console;
+use \Core\Runtime as Runtime;
+
 /**
  * The main application (dispatcher) class.
- * 
+ *
  * constants:
  * - DIR_CACHE
  * - DIR_CONFIG
+ * - DIR_LOGS
  * - DIR_STARTUP
  *
  * @author Yarick.
  */
 class Application
 {
-
-	private static $log = [];
+	private $response, $charset = 'utf8';
 
 	private function __construct($args)
 	{
 		foreach ($args as $module)
 		{
 			$file = self::fileStartup($module);
-			self::log($this, $file);
+			Console::log('Startup: ' . self::basename($file));
 			file_exists($file) && include($file);
 		}
 	}
 
+	public function setResponse($response)
+	{
+		$this->response = $response;
+	}
+
+	public function getResponse()
+	{
+		return $this->response;
+	}
+
+	public function charset($charset = null)
+	{
+		if (null !== $charset)
+		{
+			$this->charset = $charset;
+		}
+		return $this->charset;
+	}
+
 	public static function run()
 	{
+		Console::start();
+		self::checkDirectories();
 		return new self(func_get_args());
+	}
+
+	public static function basename($file)
+	{
+		$root = dirname(__DIR__);
+		if (0 === strpos($file, $root))
+		{
+			return str_replace($root, '', $file);
+		}
+		return $file;
+	}
+
+	private static function checkDirectories()
+	{
+		foreach ([self::dirCache(), self::dirLogs()] as $dir)
+		{
+			if (!file_exists($dir))
+			{
+				mkdir($dir, 0777, true);
+			}
+			if (!is_dir($dir) || !is_writable($dir))
+			{
+				$rights = substr(sprintf('%o', fileperms($dir)), -4);
+				exit("Unable to write into $dir [$rights]");
+			}
+		}
+		Runtime::set('LOCALE_DIR', self::dirRoot() . DIRECTORY_SEPARATOR . 'i18n');
+		Runtime::set('VIEW_DIR', self::dirRoot() . DIRECTORY_SEPARATOR . 'views');
 	}
 
 	public static function halt($errorCode = 404)
@@ -50,23 +102,15 @@ class Application
 	 */
 	public static function db()
 	{
-		return \Core\Database::getInstance();
-	}
-
-	public static function log($source, $message = '')
-	{
-		self::$log[] = [$source, $message];
-	}
-
-	public static function getLog($divider = "\n")
-	{
-		$result = '';
-		foreach (self::$log as $item)
-		{
-			$name = is_object($item[0]) ? get_class($item[0]) : $item[0];
-			$result .= sprintf('%s: %s', $name, $item[1]) . $divider;
-		}
-		return $result;
+		return \Core\Database::getInstance([
+			'name'       => \Core\Config::get('name@db'),
+			'user'       => \Core\Config::get('user@db'),
+			'password'   => \Core\Config::get('pass@db'),
+			'host'       => \Core\Config::get('host@db'),
+			'persistent' => \Core\Config::get('pers@db'),
+			'charset'    => \Core\Config::get('char@db'),
+			'collation'  => \Core\Config::get('collation@db')
+			]);
 	}
 
 	/**
@@ -94,7 +138,7 @@ class Application
 	 *
 	 * @static
 	 * @param mixed $target The object.
-	 * @param integer $timestamp The age of actual object. 
+	 * @param integer $timestamp The age of actual object.
 	 * Cache must be younger than timestamp.
 	 * @return mixed The cached data or FALSE on failure.
 	 */
@@ -123,16 +167,28 @@ class Application
 	/**
 	 * Returns cache file path.
 	 *
-	 * @static 
+	 * @static
 	 * @access public
 	 * @param mixed $target The object.
 	 * @return string The file path.
 	 */
 	public static function fileCache($target)
 	{
-		$filename = is_object($target) 
-			? preg_replace('/[\\\_]+/', '/', get_class($target)) : $target;
-		return self::dirCache().'/'.$filename.'.json';
+		$filename = is_object($target)
+			? preg_replace('/[\\\_]+/', DIRECTORY_SEPARATOR, get_class($target)) : $target;
+		return self::dirCache() . DIRECTORY_SEPARATOR . $filename.'.json';
+	}
+
+	/**
+	 * Returns root project directory.
+	 *
+	 * @static
+	 * @access public
+	 * @return string The directory.
+	 */
+	public static function dirRoot()
+	{
+		return defined('DIR_ROOT') ? DIR_ROOT : dirname(__DIR__);
 	}
 
 	/**
@@ -144,7 +200,7 @@ class Application
 	 */
 	public static function dirConfig()
 	{
-		return defined('DIR_CONFIG') ? DIR_CONFIG : dirname(__DIR__).'/config';
+		return defined('DIR_CONFIG') ? DIR_CONFIG : dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config';
 	}
 
 	/**
@@ -156,19 +212,85 @@ class Application
 	 */
 	public static function dirStartup()
 	{
-		return defined('DIR_STARTUP') ? DIR_STARTUP : __DIR__.'/startup';
+		return defined('DIR_STARTUP') ? DIR_STARTUP : __DIR__ . DIRECTORY_SEPARATOR . 'startup';
+	}
+
+	/**
+	 * Returns logs directory.
+	 *
+	 * @static
+	 * @access public
+	 * @return string The directory.
+	 */
+	public static function dirLogs()
+	{
+		return defined('DIR_LOGS') ? DIR_LOGS : dirname(__DIR__) . DIRECTORY_SEPARATOR . 'logs';
+	}
+
+	/**
+	 * Returns PHP plugins directory.
+	 *
+	 * @static
+	 * @access public
+	 * @return string The directory.
+	 */
+	public static function dirPlugins()
+	{
+		return defined('DIR_PLUGINS') ? DIR_PLUGINS : __DIR__ . DIRECTORY_SEPARATOR . 'plugins';
+	}
+
+	/**
+	 * Returns themes directory.
+	 *
+	 * @static
+	 * @access public
+	 * @return string The directory.
+	 */
+	public static function dirThemes()
+	{
+		return defined('DIR_THEMES') ? DIR_THEMES : dirname(__DIR__) . DIRECTORY_SEPARATOR . 'themes';
 	}
 
 	/**
 	 * Returns startup file path.
 	 *
-	 * @static 
+	 * @static
 	 * @access public
 	 * @return string The file path.
 	 */
 	public static function fileStartup($filename)
 	{
 		return self::dirStartup().'/'.$filename.'.php';
+	}
+
+	/**
+	 * Returns array of models names.
+	 *
+	 * @static
+	 * @access public
+	 * @return array The models names.
+	 */
+	public static function getModels()
+	{
+		$result = [];
+		$path = __DIR__ . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR;
+		$Iterator = new RecursiveDirectoryIterator($path);
+		$objects = new RecursiveIteratorIterator($Iterator, RecursiveIteratorIterator::SELF_FIRST);
+		foreach ($objects as $name => $object)
+		{
+			if (strtolower(substr($name, -4) != '.php'))
+			{
+				continue;
+			}
+			$name = strtolower(str_replace($path, '', substr($name, 0, strlen($name) - 4)));
+			$name = str_replace(DIRECTORY_SEPARATOR, '\\', $name);
+			$name = 'Model\\' . ucwords($name, '\\');
+			if (class_exists($name))
+			{
+				$result[]= $name;
+			}
+		}
+		return $result;
 	}
 
 }

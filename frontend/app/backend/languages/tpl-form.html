@@ -1,0 +1,49 @@
+<form class="form-horizontal" name="form" novalidate ng-submit="ok()">
+	<div class="modal-header">
+		<h3 class="modal-title">
+			{{t.LANGUAGE}} <span class="text-muted">{{model.name}}</span>
+		</h3>
+	</div>
+	<div class="modal-body">
+			<div class="form-group validation-wrap">
+				<label for="inputLocale" class="col-sm-3 col-lg-2 control-label">{{t.LOCALE}}</label>
+				<div class="col-sm-4 col-lg-3">
+					<select class="form-control" id="inputLocale" name="locale" ng-model="model.locale" ng-options="item.locale as (item.name + ' / ' + item.locale) for item in locales | orderBy:'name'">
+						<option>..</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group validation-wrap">
+				<label for="inputName" class="col-sm-3 col-lg-2 control-label">{{t.LANGUAGE}}</label>
+				<div class="col-sm-9 col-lg-10">
+					<input type="text" class="form-control" id="inputName" placeholder="{{t.PLACEHOLDER_LANGUAGE}}" name="name" ng-model="model.name" required validation>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" ng-model="model.is_active" ng-true-value="1" ng-false-value="0">
+							{{t.ENABLED}}
+						</label>
+					</div>
+				</div>
+			</div>
+	</div>
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-sm-6 text-left">
+				<button class="btn btn-success" type="submit">
+					<i class="fa fa-save"></i>
+					{{t.SAVE}}
+				</button>
+			</div>
+			<div class="col-sm-6 text-right">
+				<button class="btn btn-default" type="button" ng-click="cancel()">
+					<i class="fa fa-times"></i>
+					{{t.CANCEL}}
+				</button>
+			</div>
+		</div>
+	</div>
+</form>

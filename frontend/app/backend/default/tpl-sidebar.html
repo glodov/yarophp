@@ -1,0 +1,30 @@
+<div class="navbar navbar-default" role="navigation">
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+			<i class="fa fa-bars fa-lg"></i>
+		</button>
+		<span class="navbar-brand">
+			<a class="logo" ng-href="{{getHomeUrl()}}">
+				<img src="/img/logo.jpg" alt=""/>
+			</a>
+		</span>
+	</div>
+	<div class="navbar-collapse collapse sidebar-navbar-collapse">
+		<ul class="nav navbar-nav">
+			<li ng-repeat="item in $root.menu" ng-class="menuItemClass(item)">
+				<a ng-href="{{item.url}}">
+					<i class="fa" ng-class="item.icon"></i>
+					<span class="hidden-sm">{{item.title}}</span>
+				</a>
+			</li>
+			<li class="divider"></li>
+			<li>
+				<a ng-href="{{getLogoutUrl()}}">
+					<i class="fa fa-sign-out"></i>
+					<span class="hidden-sm">Log out</span>
+				</a>
+			</li>
+			<li class="hidden-sm" ng-hide="true"><a href="#">Reviews <span class="badge">1,118</span></a></li>
+		</ul>
+	</div>
+</div>

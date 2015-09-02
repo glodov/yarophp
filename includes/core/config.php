@@ -4,18 +4,18 @@ namespace Core;
 
 /**
  * The Config class.
- * 
+ *
  * @author Yarick.
  * @version 0.1
  */
 class Config
 {
-	
+
 	private static $container = [];
 
 	/**
 	 * The function returns config value by its name.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param string $name The config value name.
@@ -26,11 +26,11 @@ class Config
 	{
 		return isset( self::$container[ $name ] ) ? self::$container[ $name ] : $default;
 	}
-	
+
 	/**
 	 * The function sets config value by its name.
 	 * The name can be associated array.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param mixed $name The config value name or array of values.
@@ -54,42 +54,20 @@ class Config
 	/**
 	 * The function loads config values from file.
 	 * File can be php which contains array or ini like simple config file.
-	 * 
+	 *
 	 * @static
 	 * @access public
-	 * @param string $file The filepath.
+	 * @param string $file The file path.
 	 * @return bool TRUE on success, FALSE on failure.
 	 */
 	public static function load( $file )
 	{
-
-		switch ( substr( $file, -4 ) )
-		{
-			case '.php':
-				self::set( include( $file ) );
-				break;
-			
-			case '.ini':
-				foreach ( file($file) as $line )
-				{
-					if ( substr( $line, 0, 1 ) == '#' )
-					{
-						continue;
-					}
-					$arr = explode( '=', $line, 2 );
-					if ( count( $arr ) != 2 )
-					{
-						continue;
-					}
-					self::set( trim( $arr[0] ), trim( $arr[1] ) );
-				}
-				break;
-		}
+		self::set(\Helper\File::readConfig($file));
 	}
-	
+
 	/**
 	 * The function loads config values from Object.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param object $Object The object.
@@ -132,10 +110,10 @@ class Config
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * The function returns config values to show.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param string $divider The string divider.

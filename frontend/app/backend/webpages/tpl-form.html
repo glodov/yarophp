@@ -1,0 +1,140 @@
+<form class="form-horizontal" name="form" novalidate ng-submit="ok()">
+	<div class="modal-header">
+		<h3 class="modal-title">
+			{{t.WEBPAGE}} <span class="text-muted">{{model.title}}</span>
+		</h3>
+	</div>
+	<div class="modal-body">
+		<tabset>
+			<tab active="true">
+				<tab-heading>
+					{{t.DEFAULT_TAB}}
+				</tab-heading>
+
+				<div class="tab-content">
+					<div class="form-group validation-wrap">
+						<label for="inputTitle" class="col-sm-3 col-lg-2 control-label">{{t.TITLE}}</label>
+						<div class="col-sm-9 col-lg-10">
+							<input type="text" class="form-control" id="inputTitle" placeholder="{{t.PLACEHOLDER_TITLE}}" name="title" ng-model="model.title" required validation>
+						</div>
+					</div>
+					<div class="form-group validation-wrap">
+						<label for="inputURL" class="col-sm-3 col-lg-2 control-label">{{t.WEBPAGE_URL}}</label>
+						<div class="col-sm-9 col-lg-10">
+							<input type="text" class="form-control" id="inputURL" placeholder="{{t.PLACEHOLDER_URL}}" name="url" ng-model="model.url" required validation>
+						</div>
+					</div>
+					<div class="form-group validation-wrap">
+						<label for="inputController" class="col-sm-3 col-lg-2 control-label">{{t.CONTROLLER}}</label>
+						<div class="col-sm-6 col-lg-4">
+							<select class="form-control" id="inputController" name="controller" ng-model="model.controller" ng-options="item as item for item in controllers">
+								<option></option>
+							<select>
+						</div>
+					</div>
+					<fieldset>
+						<legend>{{t.SEO_DATA}}</legend>
+
+						<div class="form-group validation-wrap">
+							<label for="inputSeoTitle" class="col-sm-3 col-lg-2 control-label">{{t.SEO_TITLE}}</label>
+							<div class="col-sm-9 col-lg-10">
+								<input type="text" class="form-control" id="inputSeoTitle" placeholder="{{t.PLACEHOLDER_SEO_TITLE}}" name="seo_title" ng-model="model.seo.title" validation>
+							</div>
+						</div>
+						<div class="form-group validation-wrap">
+							<label for="inputSeoTitle" class="col-sm-3 col-lg-2 control-label">{{t.SEO_KEYWORDS}}</label>
+							<div class="col-sm-9 col-lg-10">
+								<input type="text" class="form-control" id="inputSeoKeywords" placeholder="{{t.PLACEHOLDER_SEO_KEYWORDS}}" name="seo_keywords" ng-model="model.seo.keywords" validation>
+							</div>
+						</div>
+						<div class="form-group validation-wrap">
+							<label for="inputSeoDescription" class="col-sm-3 col-lg-2 control-label">{{t.SEO_DESCRIPTION}}</label>
+							<div class="col-sm-9 col-lg-10">
+								<input type="text" class="form-control" id="inputSeoDescription" placeholder="{{t.PLACEHOLDER_SEO_DESCRIPTION}}" name="seo_description" ng-model="model.seo.description" validation>
+							</div>
+						</div>
+					</fieldset>
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" ng-model="model.is_active" ng-true-value="1" ng-false-value="0">
+									{{t.ENABLED}}
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</tab>
+			<tab ng-repeat="locale in languages">
+				<tab-heading>
+					<active-icon ng-model="locale.is_active"></active-icon>
+					{{locale.name}}
+				</tab-heading>
+
+				<div class="tab-content">
+					<div class="form-group validation-wrap">
+						<label for="inputTitle-{{locale.locale}}" class="col-sm-3 col-lg-2 control-label">{{t.TITLE}}</label>
+						<div class="col-sm-9 col-lg-10">
+							<input type="text" class="form-control" id="inputTitle-{{locale.locale}}" placeholder="{{t.PLACEHOLDER_TITLE}}" name="title_{{locale.locale}}" ng-model="model.i18n[locale.locale].title" validation>
+						</div>
+					</div>
+					<div class="form-group validation-wrap">
+						<label for="inputURL-{{locale.locale}}" class="col-sm-3 col-lg-2 control-label">{{t.WEBPAGE_URL}}</label>
+						<div class="col-sm-9 col-lg-10">
+							<input type="text" class="form-control" id="inputURL-{{locale.locale}}" placeholder="{{t.PLACEHOLDER_URL}}" name="url_{{locale.locale}}" ng-model="model.i18n[locale.locale].url" validation>
+						</div>
+					</div>
+					<fieldset>
+						<legend>{{t.SEO_DATA}}</legend>
+
+						<div class="form-group validation-wrap">
+							<label for="inputSeoTitle-{{locale.locale}}" class="col-sm-3 col-lg-2 control-label">{{t.SEO_TITLE}}</label>
+							<div class="col-sm-9 col-lg-10">
+								<input type="text" class="form-control" id="inputSeoTitle-{{locale.locale}}" placeholder="{{t.PLACEHOLDER_SEO_TITLE}}" name="seo_title_{{locale.locale}}" ng-model="model.i18n[locale.locale].seo.title" validation>
+							</div>
+						</div>
+						<div class="form-group validation-wrap">
+							<label for="inputSeoTitle-{{locale.locale}}" class="col-sm-3 col-lg-2 control-label">{{t.SEO_KEYWORDS}}</label>
+							<div class="col-sm-9 col-lg-10">
+								<input type="text" class="form-control" id="inputSeoKeywords-{{locale.locale}}" placeholder="{{t.PLACEHOLDER_SEO_KEYWORDS}}" name="seo_keywords_{{locale.locale}}" ng-model="model.i18n[locale.locale].seo.keywords" validation>
+							</div>
+						</div>
+						<div class="form-group validation-wrap">
+							<label for="inputSeoDescription-{{locale.locale}}" class="col-sm-3 col-lg-2 control-label">{{t.SEO_DESCRIPTION}}</label>
+							<div class="col-sm-9 col-lg-10">
+								<input type="text" class="form-control" id="inputSeoDescription-{{locale.locale}}" placeholder="{{t.PLACEHOLDER_SEO_DESCRIPTION}}" name="seo_description_{{locale.locale}}" ng-model="model.i18n[locale.locale].seo.description" validation>
+							</div>
+						</div>
+					</fieldset>
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" ng-model="model.i18n[locale.locale].is_active" ng-true-value="1" ng-false-value="0">
+									{{t.ENABLED}}
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</tab>
+		</tabset>
+	</div>
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-sm-6 text-left">
+				<button class="btn btn-success" type="submit">
+					<i class="fa fa-save"></i>
+					{{t.SAVE}}
+				</button>
+			</div>
+			<div class="col-sm-6 text-right">
+				<button class="btn btn-default" type="button" ng-click="cancel()">
+					<i class="fa fa-times"></i>
+					{{t.CANCEL}}
+				</button>
+			</div>
+		</div>
+	</div>
+</form>

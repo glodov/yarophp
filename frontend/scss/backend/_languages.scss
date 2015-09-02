@@ -1,0 +1,24 @@
+.languages{
+	&.panel, .panel{
+		max-width: 800px;
+	}
+
+	.table-list{
+		table-layout: fixed;
+
+		.col-sort{
+			width: 40px;
+			text-align: center;
+		}
+		.col-domain{
+			width: 50%;
+		}
+		.col-name{
+			width: 50%;
+		}
+		.col-actions{
+			width: 70px;
+			text-align: right;
+		}
+	}
+}

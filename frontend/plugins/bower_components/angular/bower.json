@@ -1,0 +1,9 @@
+{
+  "name": "angular",
+  "version": "1.4.4",
+  "main": "./angular.js",
+  "ignore": [],
+  "dependencies": {
+      "angular-bootstrap-datetimepicker": "latest"
+  }
+}

@@ -1,0 +1,27 @@
+.topbar-nav{
+	margin-left: $sidebar-width;
+	transition: width .5s, left .5s, bottom .5s;
+
+	.navbar-fixed-top{
+		margin-left: $sidebar-width;
+		@include calc(width, "100% - " + $sidebar-width);
+		z-index: 1;
+	}
+	.navbar-nav > li > span{
+		display: block;
+		padding: 15px;
+	}
+	.fa{
+		min-width: 18px;
+	}
+}
+@media (min-width: $screen-sm-min) and (max-width: $screen-md-min - 1) {
+	.topbar-nav{
+		margin-left: $sidebar-width-sm;
+
+		.navbar-fixed-top{
+			margin-left: $sidebar-width-sm;
+			@include calc(width, "100% - " + $sidebar-width-sm);
+		}
+	}
+}

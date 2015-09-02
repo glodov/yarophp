@@ -1,18 +1,20 @@
 <?
 
+namespace Core;
+
 /**
  * The Runtime class.
- * 
+ *
  * @version 0.1
  */
 class Runtime
 {
 
 	private static $container = array();
-	
+
 	/**
 	 * The function sets value by its key.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param string $key The value key. Can be associated array with values.
@@ -32,10 +34,10 @@ class Runtime
 			self::$container[ $key ] = $value;
 		}
 	}
-	
+
 	/**
 	 * The function returns value by its key.
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param string $key The value key.

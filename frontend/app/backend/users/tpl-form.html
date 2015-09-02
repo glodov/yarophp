@@ -1,0 +1,131 @@
+<form class="form-horizontal" name="form" novalidate ng-submit="ok()">
+	<div class="modal-header">
+		<h3 class="modal-title">
+			{{t.USER}} <span class="text-muted">{{model.login}}</span>
+		</h3>
+	</div>
+	<div class="modal-body">
+		<tabset>
+			<tab active="true">
+				<tab-heading>
+					{{t.DEFAULT_TAB}}
+				</tab-heading>
+
+				<div class="tab-content">
+					<div class="form-group validation-wrap">
+						<label for="inputLogin" class="col-sm-3 col-lg-2 control-label">{{t.LOGIN}}</label>
+						<div class="col-sm-9 col-lg-10">
+							<input type="text" class="form-control" id="inputLogin" placeholder="{{t.PLACEHOLDER_LOGIN}}" name="login" ng-model="model.login" required validation>
+						</div>
+					</div>
+					<div class="form-group">
+						<div ng-show="changingPassword" class="col-sm-6">
+							<div class="form-group validation-wrap">
+								<label for="inputPassword" class="col-sm-6 col-lg-4 control-label">{{t.PASSWORD}}</label>
+								<div class="col-sm-6 col-lg-8">
+									<input type="text" class="form-control" id="inputPassword" placeholder="{{t.PLACEHOLDER_PASSWORD}}" name="password" ng-model="model.password" ng-required="changingPassword" autocomplete="off" validation>
+								</div>
+							</div>
+						</div>
+						<div ng-hide="changingPassword">
+							<div class="col-sm-4 col-sm-offset-3 col-lg-offset-2">
+								<button class="btn btn-default" ng-click="changingPassword = true" type="button">
+									<i class="fa fa-lock"></i>
+									{{t.CHANGE_PASSWORD}}
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-6">
+							<div class="form-group validation-wrap">
+								<label for="inputFirstName" class="col-sm-6 col-lg-4 control-label">{{t.FIRST_NAME}}</label>
+								<div class="col-sm-6 col-lg-8">
+									<input type="text" class="form-control" id="inputFirstName" placeholder="{{t.PLACEHOLDER_FIRST_NAME}}" name="first_name" ng-model="model.first_name" required validation>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group validation-wrap">
+								<label for="inputLastName" class="col-sm-6 col-lg-4 control-label">{{t.LAST_NAME}}</label>
+								<div class="col-sm-6 col-lg-8">
+									<input type="text" class="form-control" id="inputLastName" placeholder="{{t.PLACEHOLDER_LAST_NAME}}" name="last_name" ng-model="model.last_name" required validation>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group validation-wrap">
+						<label for="inputEmail" class="col-sm-3 col-lg-2 control-label">{{t.EMAIL}}</label>
+						<div class="col-sm-9 col-lg-10">
+							<input type="text" class="form-control" id="inputEmail" placeholder="{{t.PLACEHOLDER_EMAIL}}" name="email" ng-model="model.email" required validation>
+						</div>
+					</div>
+					<div class="form-group validation-wrap">
+						<label for="inputLocale" class="col-sm-3 col-lg-2 control-label">{{t.LANGUAGE}}</label>
+						<div class="col-sm-4 col-lg-3">
+							<select class="form-control" id="inputLocale" name="locale" ng-model="model.locale" ng-options="item.locale as item.name for item in languages">
+								<option>..</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" ng-model="model.is_active" ng-true-value="1" ng-false-value="0">
+									{{t.ENABLED}}
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</tab>
+			<tab>
+				<tab-heading>
+					{{t.ADDRESS}}
+				</tab-heading>
+
+				<div class="tab-content">
+					<div class="form-group validation-wrap">
+						<label for="inputAddressStreetNo" class="col-sm-3 col-lg-2 control-label">{{t.STREET_NO}}</label>
+						<div class="col-sm-9 col-lg-10">
+							<input type="text" class="form-control" id="inputAddressStreetNo" placeholder="{{t.PLACEHOLDER_STREET_NO}}" name="address_street_no" ng-model="model.address.street_no" validation>
+						</div>
+					</div>
+					<div class="form-group validation-wrap">
+						<label for="inputAddressCity" class="col-sm-3 col-lg-2 control-label">{{t.CITY}}</label>
+						<div class="col-sm-4 col-lg-6">
+							<input type="text" class="form-control" id="inputAddressCity" placeholder="{{t.PLACEHOLDER_CITY}}" name="address_city" ng-model="model.address.city" validation>
+						</div>
+						<label for="inputAddressZip" class="col-sm-3 col-lg-2 control-label">{{t.ZIP}}</label>
+						<div class="col-sm-2 col-lg-2">
+							<input type="text" class="form-control" id="inputAddressZip" placeholder="{{t.PLACEHOLDER_ZIP}}" name="address_zip" ng-model="model.address.zip" validation>
+						</div>
+					</div>
+					<div class="form-group validation-wrap">
+						<label for="inputAddressPhone" class="col-sm-3 col-lg-2 control-label">{{t.PHONE}}</label>
+						<div class="col-sm-9 col-lg-10">
+							<input type="text" class="form-control" id="inputAddressPhone" placeholder="{{t.PLACEHOLDER_PHONE}}" name="address_phone" ng-model="model.address.phone" validation>
+						</div>
+					</div>
+				</div>
+			</tab>
+		</tabset>
+	</div>
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-sm-6 text-left">
+				<button class="btn btn-success" type="submit">
+					<i class="fa fa-save"></i>
+					{{t.SAVE}}
+				</button>
+			</div>
+			<div class="col-sm-6 text-right">
+				<button class="btn btn-default" type="button" ng-click="cancel()">
+					<i class="fa fa-times"></i>
+					{{t.CANCEL}}
+				</button>
+			</div>
+		</div>
+	</div>
+</form>
